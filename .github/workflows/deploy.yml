@@ -38,11 +38,15 @@ jobs:
           hugo-version: '0.155.3'
           extended: true
 
-      - name: Build site
-        run: hugo --gc --minify
-
       - name: Setup Pages
+        id: pages
         uses: actions/configure-pages@v5
+
+      - name: Build site
+        env:
+          HUGO_ENVIRONMENT: production
+          HUGO_CACHEDIR: /tmp/hugo_cache
+        run: hugo --gc --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
