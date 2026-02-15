@@ -1,0 +1,269 @@
+{{ define "main" }}
+  <section class="space-y-6">
+    <header class="space-y-2">
+      <h2 class="text-3xl font-bold tracking-tight">{{ .Title }}</h2>
+      <div class="copy max-w-none leading-7 text-zinc-800">
+        {{ .Content }}
+      </div>
+    </header>
+
+    {{ if eq .Section "blog" }}
+      {{ $visibleBlog := where .Pages "Date.Unix" "le" (now).Unix }}
+      <div class="space-y-4">
+        {{ range $visibleBlog.ByDate.Reverse }}
+          {{ $page := . }}
+          {{ $imgURL := "" }}
+          {{ $imgWidth := 0 }}
+          {{ $imgHeight := 0 }}
+          {{ with $page.Params.image }}
+            {{ $imgPath := . }}
+            {{ if or (hasPrefix $imgPath "http://") (hasPrefix $imgPath "https://") }}
+              {{ $imgURL = $imgPath }}
+            {{ else }}
+              {{ with ($.Site.GetPage "/blog") }}
+                {{ with .Resources.GetMatch $imgPath }}
+                  {{ $thumb := .Fill "960x540 webp q75" }}
+                  {{ $imgURL = $thumb.RelPermalink }}
+                  {{ $imgWidth = $thumb.Width }}
+                  {{ $imgHeight = $thumb.Height }}
+                {{ else }}
+                  {{ $imgURL = ($imgPath | relURL) }}
+                {{ end }}
+              {{ else }}
+                {{ $imgURL = ($imgPath | relURL) }}
+              {{ end }}
+            {{ end }}
+          {{ end }}
+
+          <article class="card">
+            {{ if $imgURL }}
+              <div class="mb-4 aspect-video overflow-hidden rounded-lg border border-zinc-200 bg-zinc-100">
+                <img
+                  src="{{ $imgURL }}"
+                  alt="{{ $page.Params.image_alt | default $page.Title }}"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-cover"
+                  {{ if gt $imgWidth 0 }}width="{{ $imgWidth }}" height="{{ $imgHeight }}"{{ end }}
+                >
+              </div>
+            {{ end }}
+            <h3 class="text-xl font-semibold">
+              <a href="{{ $page.RelPermalink }}" class="hover:underline">{{ $page.Title }}</a>
+            </h3>
+            <p class="mt-1 text-sm text-zinc-500">{{ $page.Date.Format "02/01/2006" }}</p>
+            <div class="copy mt-2 text-zinc-700">{{ $page.Summary }}</div>
+            {{ if $page.Truncated }}
+              <p class="mt-3">
+                <a href="{{ $page.RelPermalink }}" class="text-sm font-medium text-zinc-900 underline underline-offset-4 hover:text-zinc-700">
+                  Lire plus...
+                </a>
+              </p>
+            {{ end }}
+          </article>
+        {{ end }}
+      </div>
+
+    {{ else if eq .Section "agenda" }}
+      {{ $events := .RegularPages.ByDate }}
+      {{ $nowUnix := (now).Unix }}
+      {{ $future := slice }}
+      {{ $past := slice }}
+
+      {{ range $events }}
+        {{ $start := .Date }}
+        {{ with .Params.start }}{{ $start = time.AsTime . }}{{ end }}
+        {{ if ge ($start.Unix) $nowUnix }}
+          {{ $future = $future | append . }}
+        {{ else }}
+          {{ $past = $past | append . }}
+        {{ end }}
+      {{ end }}
+
+      {{ if gt (len $future) 0 }}
+        {{ $monthKeys := slice }}
+        {{ $monthSeen := newScratch }}
+        {{ range sort $future "Date" "asc" }}
+          {{ $eventStart := .Date }}
+          {{ with .Params.start }}{{ $eventStart = time.AsTime . }}{{ end }}
+          {{ $key := $eventStart.Format "2006-01" }}
+          {{ if not ($monthSeen.Get $key) }}
+            {{ $monthSeen.Set $key true }}
+            {{ $monthKeys = $monthKeys | append $key }}
+          {{ end }}
+        {{ end }}
+
+        <section class="space-y-4" aria-labelledby="agenda-calendrier">
+          <h3 id="agenda-calendrier" class="text-xl font-semibold">Calendrier (à venir)</h3>
+          <div class="grid gap-4 lg:grid-cols-2">
+            {{ range $monthKeys }}
+              {{ $monthKey := . }}
+              {{ $monthStart := time.AsTime (printf "%s-01" $monthKey) }}
+              {{ $nextMonth := $monthStart.AddDate 0 1 0 }}
+              {{ $daysInMonth := int (div (sub ($nextMonth.Unix) ($monthStart.Unix)) 86400) }}
+              {{ $firstWeekday := int $monthStart.Weekday }}
+
+              <section class="card p-4">
+                <h4 class="text-base font-semibold">{{ $monthStart.Format "01/2006" }}</h4>
+                <div class="mt-3 grid grid-cols-7 gap-1 text-center text-xs text-zinc-500">
+                  <span>D</span><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span>
+                  {{ if gt $firstWeekday 0 }}
+                    {{ range seq $firstWeekday }}
+                      <span></span>
+                    {{ end }}
+                  {{ end }}
+
+                  {{ range seq 1 $daysInMonth }}
+                    {{ $day := . }}
+                    {{ $hasEvent := false }}
+                    {{ $targetID := "" }}
+                    {{ range sort $future "Date" "asc" }}
+                      {{ $eventStart := .Date }}
+                      {{ with .Params.start }}{{ $eventStart = time.AsTime . }}{{ end }}
+                      {{ if and (eq ($eventStart.Format "2006-01") $monthKey) (eq $eventStart.Day $day) }}
+                        {{ $hasEvent = true }}
+                        {{ if eq $targetID "" }}{{ $targetID = printf "agenda-event-%s" .File.TranslationBaseName }}{{ end }}
+                      {{ end }}
+                    {{ end }}
+
+                    {{ if and $hasEvent (ne $targetID "") }}
+                      <a href="#{{ $targetID }}" aria-label="Voir les évènements du {{ $day }}/{{ $monthStart.Format "01/2006" }}" class="block min-h-12 rounded-md border border-zinc-400 bg-zinc-100 p-1 hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-400">
+                        <p class="font-medium text-zinc-700">{{ $day }}</p>
+                        <div class="mt-1 flex flex-wrap justify-center gap-1">
+                          {{ range sort $future "Date" "asc" }}
+                            {{ $eventStart := .Date }}
+                            {{ with .Params.start }}{{ $eventStart = time.AsTime . }}{{ end }}
+                            {{ if and (eq ($eventStart.Format "2006-01") $monthKey) (eq $eventStart.Day $day) }}
+                              <span class="inline-block h-1.5 w-1.5 rounded-full" style="background-color: {{ .Params.color | default "#18181b" }};"></span>
+                            {{ end }}
+                          {{ end }}
+                        </div>
+                      </a>
+                    {{ else }}
+                      <div class="min-h-12 rounded-md border border-zinc-200 p-1">
+                        <p class="font-medium text-zinc-700">{{ $day }}</p>
+                      </div>
+                    {{ end }}
+                  {{ end }}
+                </div>
+              </section>
+            {{ end }}
+          </div>
+        </section>
+      {{ end }}
+
+      <section class="space-y-6" aria-labelledby="agenda-liste">
+        <h3 id="agenda-liste" class="text-xl font-semibold">Liste des évènements</h3>
+
+        <div class="space-y-4">
+          <h4 class="text-base font-semibold">Évènements à venir</h4>
+          {{ if gt (len $future) 0 }}
+            {{ range sort $future "Date" "asc" }}
+              {{ $start := .Date }}
+              {{ with .Params.start }}{{ $start = time.AsTime . }}{{ end }}
+              {{ $end := $start }}
+              {{ $hasEnd := false }}
+              {{ with .Params.end }}
+                {{ $end = time.AsTime . }}
+                {{ $hasEnd = true }}
+              {{ end }}
+
+              <article id="agenda-event-{{ .File.TranslationBaseName }}" class="card border-l-4 scroll-mt-24" style="border-left-color: {{ .Params.color | default "#18181b" }};">
+                <h4 class="text-lg font-semibold">{{ .Title }}</h4>
+                <p class="mt-1 text-sm text-zinc-600">{{ $start.Format "02/01/2006 15:04" }}{{ if $hasEnd }} - {{ $end.Format "02/01/2006 15:04" }}{{ end }}</p>
+                {{ with .Params.location }}<p class="mt-1 text-sm text-zinc-700">{{ . }}</p>{{ end }}
+                <div class="copy mt-3 text-sm leading-6 text-zinc-700">{{ .Summary }}</div>
+                {{ with .Params.tags }}
+                  <ul class="mt-3 flex flex-wrap gap-2">
+                    {{ range . }}<li class="rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-700">{{ . }}</li>{{ end }}
+                  </ul>
+                {{ end }}
+                {{ with .Params.post_ref }}
+                  {{ $postRef := . }}
+                  {{ with site.GetPage $postRef }}
+                    <p class="mt-3 text-sm"><a href="{{ .RelPermalink }}" class="underline underline-offset-4 hover:text-zinc-900">Post lié: {{ .Title }}</a></p>
+                  {{ else }}
+                    <p class="mt-3 text-sm"><a href="{{ $postRef }}" class="underline underline-offset-4 hover:text-zinc-900">Post lié</a></p>
+                  {{ end }}
+                {{ end }}
+              </article>
+            {{ end }}
+          {{ else }}
+            <p class="text-sm text-zinc-600">Aucun évènement à venir.</p>
+          {{ end }}
+        </div>
+
+        <div class="space-y-4">
+          <h4 class="text-base font-semibold">Évènements passés</h4>
+          {{ if gt (len $past) 0 }}
+            {{ range sort $past "Date" "desc" }}
+              {{ $start := .Date }}
+              {{ with .Params.start }}{{ $start = time.AsTime . }}{{ end }}
+              {{ $end := $start }}
+              {{ $hasEnd := false }}
+              {{ with .Params.end }}
+                {{ $end = time.AsTime . }}
+                {{ $hasEnd = true }}
+              {{ end }}
+
+              <article class="card border-l-4 opacity-85" style="border-left-color: {{ .Params.color | default "#71717a" }};">
+                <h4 class="text-lg font-semibold">{{ .Title }}</h4>
+                <p class="mt-1 text-sm text-zinc-600">{{ $start.Format "02/01/2006 15:04" }}{{ if $hasEnd }} - {{ $end.Format "02/01/2006 15:04" }}{{ end }}</p>
+                {{ with .Params.location }}<p class="mt-1 text-sm text-zinc-700">{{ . }}</p>{{ end }}
+                <div class="copy mt-3 text-sm leading-6 text-zinc-700">{{ .Summary }}</div>
+                {{ with .Params.tags }}
+                  <ul class="mt-3 flex flex-wrap gap-2">
+                    {{ range . }}<li class="rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-700">{{ . }}</li>{{ end }}
+                  </ul>
+                {{ end }}
+                {{ with .Params.post_ref }}
+                  {{ $postRef := . }}
+                  {{ with site.GetPage $postRef }}
+                    <p class="mt-3 text-sm"><a href="{{ .RelPermalink }}" class="underline underline-offset-4 hover:text-zinc-900">Post lié: {{ .Title }}</a></p>
+                  {{ else }}
+                    <p class="mt-3 text-sm"><a href="{{ $postRef }}" class="underline underline-offset-4 hover:text-zinc-900">Post lié</a></p>
+                  {{ end }}
+                {{ end }}
+              </article>
+            {{ end }}
+          {{ else }}
+            <p class="text-sm text-zinc-600">Aucun évènement passé.</p>
+          {{ end }}
+        </div>
+      </section>
+
+    {{ else if eq .Section "ressources" }}
+      <ul class="space-y-3">
+        {{ range sort .Pages "Params.category" "asc" }}
+          {{ $page := . }}
+          <li class="card">
+            <div class="flex items-start justify-between gap-3">
+              {{ with $page.Params.external_url }}
+                <a href="{{ . }}" target="_blank" rel="noreferrer" class="font-semibold text-zinc-900 underline-offset-4 hover:underline">{{ $page.Title }}</a>
+              {{ else }}
+                <span class="font-semibold text-zinc-900">{{ $page.Title }}</span>
+              {{ end }}
+              <p class="shrink-0 text-xs uppercase tracking-wide text-zinc-500">{{ $page.Params.category }}</p>
+            </div>
+            <div class="copy mt-1 text-sm leading-6 text-zinc-700">{{ $page.Summary }}</div>
+            {{ with $page.Params.external_url_2 }}
+              <p class="mt-2"><a href="{{ . }}" target="_blank" rel="noreferrer" class="text-sm text-zinc-700 underline">Lien supplémentaire</a></p>
+            {{ end }}
+          </li>
+        {{ end }}
+      </ul>
+
+    {{ else }}
+      {{ if .Pages }}
+        <ul class="space-y-3">
+          {{ range .Pages.ByWeight }}
+            <li class="card">
+              <a href="{{ .RelPermalink }}" class="font-semibold hover:underline">{{ .Title }}</a>
+              <div class="copy mt-1 text-sm leading-6 text-zinc-700">{{ .Summary }}</div>
+            </li>
+          {{ end }}
+        </ul>
+      {{ end }}
+    {{ end }}
+  </section>
+{{ end }}

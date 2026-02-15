@@ -1,0 +1,23 @@
+{{ if and .IsPage (or (eq .Section "blog") (eq .Section "ressources")) }}
+  {{ $ancestors := .Ancestors.Reverse }}
+  <nav aria-label="Fil d'Ariane" class="mb-6">
+    <ol class="flex flex-wrap items-center gap-2 text-sm text-zinc-600">
+      {{ range $i, $ancestor := $ancestors }}
+        {{ if gt $i 0 }}
+          <li aria-hidden="true" class="text-zinc-400">/</li>
+        {{ end }}
+        <li>
+          <a href="{{ $ancestor.RelPermalink }}" class="hover:text-zinc-900 hover:underline">
+            {{ if $ancestor.IsHome }}Accueil{{ else }}{{ $ancestor.LinkTitle }}{{ end }}
+          </a>
+        </li>
+      {{ end }}
+
+      {{ if gt (len $ancestors) 0 }}
+        <li aria-hidden="true" class="text-zinc-400">/</li>
+      {{ end }}
+
+      <li aria-current="page" class="font-medium text-zinc-900">{{ .LinkTitle }}</li>
+    </ol>
+  </nav>
+{{ end }}

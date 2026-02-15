@@ -1,0 +1,107 @@
+{{ define "main" }}
+  {{ $imgURL := "" }}
+  {{ $imgWidth := 0 }}
+  {{ $imgHeight := 0 }}
+  {{ with .Params.image }}
+    {{ $imgPath := . }}
+    {{ if or (hasPrefix $imgPath "http://") (hasPrefix $imgPath "https://") }}
+      {{ $imgURL = $imgPath }}
+    {{ else }}
+      {{ with ($.Site.GetPage (printf "/%s" $.Section)) }}
+        {{ with .Resources.GetMatch $imgPath }}
+          {{ if eq $.Section "blog" }}
+            {{ $hero := .Fill "1440x810 webp q80" }}
+            {{ $imgURL = $hero.RelPermalink }}
+            {{ $imgWidth = $hero.Width }}
+            {{ $imgHeight = $hero.Height }}
+          {{ else }}
+            {{ $imgURL = .RelPermalink }}
+          {{ end }}
+        {{ else }}
+          {{ $imgURL = ($imgPath | relURL) }}
+        {{ end }}
+      {{ else }}
+        {{ $imgURL = ($imgPath | relURL) }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+
+  {{ if and (eq .Section "blog") (gt .Date.Unix (now).Unix) }}
+    <article class="space-y-4">
+      <h2 class="text-3xl font-bold tracking-tight">{{ .Title }}</h2>
+      <p class="text-zinc-700">Cet article sera publié le {{ .Date.Format "02/01/2006" }}.</p>
+    </article>
+  {{ else }}
+    <article class="space-y-6">
+      <header class="space-y-2">
+        <h2 class="text-3xl font-bold tracking-tight">{{ .Title }}</h2>
+        {{ if eq .Section "blog" }}
+          <p class="text-sm text-zinc-500">{{ .Date.Format "02/01/2006" }}</p>
+        {{ end }}
+      </header>
+
+      {{ if and (eq .Section "blog") $imgURL }}
+        <figure class="aspect-video overflow-hidden rounded-xl border border-zinc-200 bg-zinc-100">
+          <img
+            src="{{ $imgURL }}"
+            alt="{{ .Params.image_alt | default .Title }}"
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover"
+            {{ if gt $imgWidth 0 }}width="{{ $imgWidth }}" height="{{ $imgHeight }}"{{ end }}
+          >
+        </figure>
+      {{ end }}
+
+      {{ if eq .Section "agenda" }}
+        {{ $start := .Date }}
+        {{ with .Params.start }}{{ $start = time.AsTime . }}{{ end }}
+        {{ $end := $start }}
+        {{ $hasEnd := false }}
+        {{ with .Params.end }}
+          {{ $end = time.AsTime . }}
+          {{ $hasEnd = true }}
+        {{ end }}
+
+        <section class="card border-l-4" style="border-left-color: {{ .Params.color | default "#18181b" }};">
+          <p class="text-sm text-zinc-700">
+            {{ $start.Format "02/01/2006 15:04" }}{{ if $hasEnd }} - {{ $end.Format "02/01/2006 15:04" }}{{ end }}
+          </p>
+          {{ with .Params.location }}
+            <p class="mt-1 text-sm text-zinc-700">{{ . }}</p>
+          {{ end }}
+          {{ with .Params.tags }}
+            <ul class="mt-3 flex flex-wrap gap-2">
+              {{ range . }}
+                <li class="rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-700">{{ . }}</li>
+              {{ end }}
+            </ul>
+          {{ end }}
+          {{ with .Params.post_ref }}
+            {{ $postRef := . }}
+            {{ with site.GetPage $postRef }}
+              <p class="mt-3 text-sm"><a href="{{ .RelPermalink }}" class="underline underline-offset-4 hover:text-zinc-900">Post lié: {{ .Title }}</a></p>
+            {{ else }}
+              <p class="mt-3 text-sm"><a href="{{ $postRef }}" class="underline underline-offset-4 hover:text-zinc-900">Post lié</a></p>
+            {{ end }}
+          {{ end }}
+        </section>
+      {{ end }}
+
+      {{ if and (eq .Section "ressources") .Params.external_url }}
+        <p>
+          <a class="inline-block rounded-md bg-zinc-900 px-3 py-2 text-sm font-medium text-white" href="{{ .Params.external_url }}" target="_blank" rel="noreferrer">Voir la ressource</a>
+        </p>
+        {{ with .Params.external_url_2 }}
+          <p>
+            <a class="inline-block rounded-md border border-zinc-300 px-3 py-2 text-sm font-medium text-zinc-800" href="{{ . }}" target="_blank" rel="noreferrer">Voir la ressource 2</a>
+          </p>
+        {{ end }}
+      {{ end }}
+
+      <div class="copy max-w-none leading-7 text-zinc-800">
+        {{ .Content }}
+      </div>
+    </article>
+  {{ end }}
+{{ end }}

@@ -1,0 +1,54 @@
+baseURL = 'https://ferocesdolls.org/'
+languageCode = 'fr-FR'
+defaultContentLanguage = 'fr'
+title = 'Féroces Dolls'
+theme = 'feroce'
+enableRobotsTXT = true
+timeZone = 'Europe/Paris'
+
+# Keep future pages available for agenda events.
+buildFuture = true
+
+[params]
+  description = 'Collectif autogéré en mixité transfem* à Montpellier.'
+  defaultSocialImage = 'fd_icon.png'
+
+[params.social]
+  email = 'reseautransfem-contact@lebib.org'
+  instagram = 'https://www.instagram.com/ferocesdolls/'
+  mastodon = 'https://piaille.fr/@ferocesdolls'
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      hardWraps = true
+
+[[menus.main]]
+  name = 'Accueil'
+  pageRef = '/'
+  weight = 10
+
+[[menus.main]]
+  name = 'Blog'
+  pageRef = '/blog'
+  weight = 20
+
+[[menus.main]]
+  name = 'Agenda'
+  pageRef = '/agenda'
+  weight = 30
+
+[[menus.main]]
+  name = 'Dons'
+  pageRef = '/dons'
+  weight = 40
+
+[[menus.main]]
+  name = 'Ressources'
+  pageRef = '/ressources'
+  weight = 50
+
+[[menus.main]]
+  name = 'Contact'
+  pageRef = '/contact'
+  weight = 60

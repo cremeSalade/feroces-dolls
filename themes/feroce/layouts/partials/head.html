@@ -1,0 +1,37 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+{{ $title := cond .IsHome site.Title (printf "%s | %s" .Title site.Title) }}
+{{ $rawDescription := .Description | default .Summary | default site.Params.description }}
+{{ $description := $rawDescription | plainify | htmlUnescape | strings.TrimSpace }}
+{{ $socialImage := .Params.social_image | default site.Params.defaultSocialImage | default "fd_icon.png" }}
+{{ $socialImageURL := $socialImage | absURL }}
+
+<title>{{ $title }}</title>
+<meta name="description" content="{{ $description }}">
+<link rel="canonical" href="{{ .Permalink }}">
+<link rel="icon" type="image/png" href="{{ "fd_icon.png" | relURL }}">
+
+<meta property="og:site_name" content="{{ site.Title }}">
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $description }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:image" content="{{ $socialImageURL }}">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ $title }}">
+<meta name="twitter:description" content="{{ $description }}">
+<meta name="twitter:image" content="{{ $socialImageURL }}">
+
+{{ if and .IsPage (eq .Section "blog") (gt .Date.Unix (now).Unix) }}
+  <meta name="robots" content="noindex, nofollow">
+{{ end }}
+
+{{ with site.Params.social.mastodon }}
+  <link rel="me" href="{{ . }}">
+{{ end }}
+
+{{ $css := resources.Get "css/main.css" | postCSS | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">

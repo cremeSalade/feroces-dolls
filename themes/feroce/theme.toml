@@ -1,0 +1,4 @@
+name = 'feroce'
+license = 'MIT'
+description = 'Theme minimal pour le site Feroce Dolls'
+min_version = '0.153.0'

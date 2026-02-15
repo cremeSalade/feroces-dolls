@@ -1,0 +1,16 @@
+<footer class="site-footer border-t border-zinc-200 bg-white/80">
+  <div class="container-feroce flex flex-wrap items-center justify-between gap-3 py-6 text-sm text-zinc-600">
+    <p class="font-medium text-zinc-700">{{ site.Title }}</p>
+    <ul class="flex flex-wrap items-center gap-4">
+      {{ with site.Params.social.email }}
+        <li><a href="mailto:{{ . }}" class="underline underline-offset-4 hover:text-zinc-900">{{ . }}</a></li>
+      {{ end }}
+      {{ with site.Params.social.instagram }}
+        <li><a href="{{ . }}" target="_blank" rel="noreferrer" class="underline underline-offset-4 hover:text-zinc-900">Instagram</a></li>
+      {{ end }}
+      {{ with site.Params.social.mastodon }}
+        <li><a href="{{ . }}" target="_blank" rel="me noreferrer" class="underline underline-offset-4 hover:text-zinc-900">Mastodon</a></li>
+      {{ end }}
+    </ul>
+  </div>
+</footer>
