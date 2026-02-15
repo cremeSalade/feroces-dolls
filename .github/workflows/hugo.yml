@@ -22,7 +22,7 @@ jobs:
     env:
       HUGO_VERSION: "0.155.3"
       HUGO_ENVIRONMENT: production
-      HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache
+      HUGO_CACHEDIR: ${{ github.workspace }}/.hugo_cache
     steps:
       - name: Checkout
         uses: actions/checkout@v4
