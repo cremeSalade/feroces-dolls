@@ -1,5 +1,41 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta id="theme-color-meta" name="theme-color" content="#f8eaf3">
+<script>
+  (() => {
+    const key = "fd-theme";
+    const root = document.documentElement;
+    const darkColor = "#16131a";
+    const lightColor = "#f8eaf3";
+    let theme = "light";
+
+    try {
+      const stored = localStorage.getItem(key);
+      if (stored === "light" || stored === "dark") {
+        theme = stored;
+      } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        theme = "dark";
+      }
+    } catch (_) {
+      if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        theme = "dark";
+      }
+    }
+
+    root.setAttribute("data-theme", theme);
+    const metaTheme = document.getElementById("theme-color-meta");
+    if (metaTheme) metaTheme.setAttribute("content", theme === "dark" ? darkColor : lightColor);
+  })();
+</script>
+<style>
+  html, body { background-color: #f8eaf3; color: #2f2230; }
+  html[data-theme="dark"], html[data-theme="dark"] body { background-color: #16131a; color: #f7edf6; }
+  .brand-icon { width: 36px; height: 36px; display: block; }
+  .brand-icon-dark { display: none; }
+  html[data-theme="dark"] .brand-icon-light { display: none; }
+  html[data-theme="dark"] .brand-icon-dark { display: block; }
+</style>
 
 {{ $title := cond .IsHome site.Title (printf "%s | %s" .Title site.Title) }}
 {{ $rawDescription := .Description | default .Summary | default site.Params.description }}
@@ -34,4 +70,5 @@
 {{ end }}
 
 {{ $css := resources.Get "css/main.css" | postCSS | minify | fingerprint }}
+<link rel="preload" href="{{ $css.RelPermalink }}" as="style" integrity="{{ $css.Data.Integrity }}">
 <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">

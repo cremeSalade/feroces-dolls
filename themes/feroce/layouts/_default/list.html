@@ -1,10 +1,14 @@
 {{ define "main" }}
-  <section class="space-y-6">
-    <header class="space-y-2">
+  <section class="space-y-4">
+    <header class="space-y-4">
       <h2 class="text-3xl font-bold tracking-tight">{{ .Title }}</h2>
-      <div class="copy max-w-none leading-7 text-zinc-800">
-        {{ .Content }}
-      </div>
+      {{ with .Content }}
+        <div class="panel">
+          <div class="copy max-w-none leading-7 text-zinc-800">
+            {{ . }}
+          </div>
+        </div>
+      {{ end }}
     </header>
 
     {{ if eq .Section "blog" }}
@@ -80,77 +84,72 @@
         {{ end }}
       {{ end }}
 
-      {{ if gt (len $future) 0 }}
-        {{ $monthKeys := slice }}
-        {{ $monthSeen := newScratch }}
-        {{ range sort $future "Date" "asc" }}
-          {{ $eventStart := .Date }}
-          {{ with .Params.start }}{{ $eventStart = time.AsTime . }}{{ end }}
-          {{ $key := $eventStart.Format "2006-01" }}
-          {{ if not ($monthSeen.Get $key) }}
-            {{ $monthSeen.Set $key true }}
-            {{ $monthKeys = $monthKeys | append $key }}
-          {{ end }}
-        {{ end }}
-
-        <section class="space-y-4" aria-labelledby="agenda-calendrier">
-          <h3 id="agenda-calendrier" class="text-xl font-semibold">Calendrier (à venir)</h3>
-          <div class="grid gap-4 lg:grid-cols-2">
-            {{ range $monthKeys }}
-              {{ $monthKey := . }}
-              {{ $monthStart := time.AsTime (printf "%s-01" $monthKey) }}
-              {{ $nextMonth := $monthStart.AddDate 0 1 0 }}
-              {{ $daysInMonth := int (div (sub ($nextMonth.Unix) ($monthStart.Unix)) 86400) }}
-              {{ $firstWeekday := int $monthStart.Weekday }}
-
-              <section class="card p-4">
-                <h4 class="text-base font-semibold">{{ $monthStart.Format "01/2006" }}</h4>
-                <div class="mt-3 grid grid-cols-7 gap-1 text-center text-xs text-zinc-500">
-                  <span>D</span><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span>
-                  {{ if gt $firstWeekday 0 }}
-                    {{ range seq $firstWeekday }}
-                      <span></span>
-                    {{ end }}
-                  {{ end }}
-
-                  {{ range seq 1 $daysInMonth }}
-                    {{ $day := . }}
-                    {{ $hasEvent := false }}
-                    {{ $targetID := "" }}
-                    {{ range sort $future "Date" "asc" }}
-                      {{ $eventStart := .Date }}
-                      {{ with .Params.start }}{{ $eventStart = time.AsTime . }}{{ end }}
-                      {{ if and (eq ($eventStart.Format "2006-01") $monthKey) (eq $eventStart.Day $day) }}
-                        {{ $hasEvent = true }}
-                        {{ if eq $targetID "" }}{{ $targetID = printf "agenda-event-%s" .File.TranslationBaseName }}{{ end }}
-                      {{ end }}
-                    {{ end }}
-
-                    {{ if and $hasEvent (ne $targetID "") }}
-                      <a href="#{{ $targetID }}" aria-label="Voir les évènements du {{ $day }}/{{ $monthStart.Format "01/2006" }}" class="block min-h-12 rounded-md border border-zinc-400 bg-zinc-100 p-1 hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-400">
-                        <p class="font-medium text-zinc-700">{{ $day }}</p>
-                        <div class="mt-1 flex flex-wrap justify-center gap-1">
-                          {{ range sort $future "Date" "asc" }}
-                            {{ $eventStart := .Date }}
-                            {{ with .Params.start }}{{ $eventStart = time.AsTime . }}{{ end }}
-                            {{ if and (eq ($eventStart.Format "2006-01") $monthKey) (eq $eventStart.Day $day) }}
-                              <span class="inline-block h-1.5 w-1.5 rounded-full" style="background-color: {{ .Params.color | default "#18181b" }};"></span>
-                            {{ end }}
-                          {{ end }}
-                        </div>
-                      </a>
-                    {{ else }}
-                      <div class="min-h-12 rounded-md border border-zinc-200 p-1">
-                        <p class="font-medium text-zinc-700">{{ $day }}</p>
-                      </div>
-                    {{ end }}
-                  {{ end }}
-                </div>
-              </section>
-            {{ end }}
-          </div>
-        </section>
+      {{ $monthNames := dict "1" "janvier" "2" "février" "3" "mars" "4" "avril" "5" "mai" "6" "juin" "7" "juillet" "8" "août" "9" "septembre" "10" "octobre" "11" "novembre" "12" "décembre" }}
+      {{ $monthStarts := slice }}
+      {{ $baseMonth := time.AsTime (printf "%s-01" (now.Format "2006-01")) }}
+      {{ range seq 4 }}
+        {{ $offset := sub . 1 }}
+        {{ $monthStarts = $monthStarts | append ($baseMonth.AddDate 0 $offset 0) }}
       {{ end }}
+
+      <section class="space-y-4" aria-labelledby="agenda-calendrier">
+        <h3 id="agenda-calendrier" class="text-xl font-semibold">Calendrier (à venir)</h3>
+        <div class="grid gap-4 lg:grid-cols-2">
+          {{ range $monthStarts }}
+            {{ $monthStart := . }}
+            {{ $monthKey := $monthStart.Format "2006-01" }}
+            {{ $nextMonth := $monthStart.AddDate 0 1 0 }}
+            {{ $daysInMonth := int (div (sub ($nextMonth.Unix) ($monthStart.Unix)) 86400) }}
+            {{ $firstWeekday := mod (add (int $monthStart.Weekday) 6) 7 }}
+            {{ $monthLabel := printf "%s %d" (strings.FirstUpper (index $monthNames (printf "%d" (int $monthStart.Month)))) $monthStart.Year }}
+
+            <section class="panel p-4">
+              <h4 class="text-base font-semibold">{{ $monthLabel }}</h4>
+              <div class="mt-3 grid grid-cols-7 gap-1 text-center text-xs text-zinc-500">
+                <span>L</span><span>Ma</span><span>Me</span><span>J</span><span>V</span><span>S</span><span>D</span>
+                {{ if gt $firstWeekday 0 }}
+                  {{ range seq $firstWeekday }}
+                    <span></span>
+                  {{ end }}
+                {{ end }}
+
+                {{ range seq 1 $daysInMonth }}
+                  {{ $day := . }}
+                  {{ $hasEvent := false }}
+                  {{ $targetID := "" }}
+                  {{ range sort $future "Date" "asc" }}
+                    {{ $eventStart := .Date }}
+                    {{ with .Params.start }}{{ $eventStart = time.AsTime . }}{{ end }}
+                    {{ if and (eq ($eventStart.Format "2006-01") $monthKey) (eq $eventStart.Day $day) }}
+                      {{ $hasEvent = true }}
+                      {{ if eq $targetID "" }}{{ $targetID = printf "agenda-event-%s" .File.TranslationBaseName }}{{ end }}
+                    {{ end }}
+                  {{ end }}
+
+                  {{ if and $hasEvent (ne $targetID "") }}
+                    <a href="#{{ $targetID }}" aria-label="Voir les évènements du {{ $day }}/{{ $monthStart.Format "01/2006" }}" class="block min-h-12 rounded-md border border-zinc-400 bg-zinc-100 p-1 hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-400">
+                      <p class="font-medium text-zinc-700">{{ $day }}</p>
+                      <div class="mt-1 flex flex-wrap justify-center gap-1">
+                        {{ range sort $future "Date" "asc" }}
+                          {{ $eventStart := .Date }}
+                          {{ with .Params.start }}{{ $eventStart = time.AsTime . }}{{ end }}
+                          {{ if and (eq ($eventStart.Format "2006-01") $monthKey) (eq $eventStart.Day $day) }}
+                            <span class="inline-block h-1.5 w-1.5 rounded-full" style="background-color: {{ .Params.color | default "#18181b" }};"></span>
+                          {{ end }}
+                        {{ end }}
+                      </div>
+                    </a>
+                  {{ else }}
+                    <div class="min-h-12 rounded-md border border-zinc-200 p-1">
+                      <p class="font-medium text-zinc-700">{{ $day }}</p>
+                    </div>
+                  {{ end }}
+                {{ end }}
+              </div>
+            </section>
+          {{ end }}
+        </div>
+      </section>
 
       <section class="space-y-6" aria-labelledby="agenda-liste">
         <h3 id="agenda-liste" class="text-xl font-semibold">Liste des évènements</h3>
@@ -168,11 +167,16 @@
                 {{ $hasEnd = true }}
               {{ end }}
 
-              <article id="agenda-event-{{ .File.TranslationBaseName }}" class="card border-l-4 scroll-mt-24" style="border-left-color: {{ .Params.color | default "#18181b" }};">
+              <article id="agenda-event-{{ .File.TranslationBaseName }}" class="panel border-l-4 scroll-mt-24" style="border-left-color: {{ .Params.color | default "#18181b" }};">
                 <h4 class="text-lg font-semibold">{{ .Title }}</h4>
                 <p class="mt-1 text-sm text-zinc-600">{{ $start.Format "02/01/2006 15:04" }}{{ if $hasEnd }} - {{ $end.Format "02/01/2006 15:04" }}{{ end }}</p>
                 {{ with .Params.location }}<p class="mt-1 text-sm text-zinc-700">{{ . }}</p>{{ end }}
                 <div class="copy mt-3 text-sm leading-6 text-zinc-700">{{ .Summary }}</div>
+                <p class="mt-3">
+                  <a href="{{ .RelPermalink }}" class="text-sm font-medium text-zinc-900 underline underline-offset-4 hover:text-zinc-700">
+                    Lire plus...
+                  </a>
+                </p>
                 {{ with .Params.tags }}
                   <ul class="mt-3 flex flex-wrap gap-2">
                     {{ range . }}<li class="rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-700">{{ . }}</li>{{ end }}
@@ -206,11 +210,19 @@
                 {{ $hasEnd = true }}
               {{ end }}
 
-              <article class="card border-l-4 opacity-85" style="border-left-color: {{ .Params.color | default "#71717a" }};">
-                <h4 class="text-lg font-semibold">{{ .Title }}</h4>
+              <article class="panel agenda-past border-l-4" style="border-left-color: {{ .Params.color | default "#71717a" }};">
+                <div class="flex items-start justify-between gap-3">
+                  <h4 class="text-lg font-semibold">{{ .Title }}</h4>
+                  <span class="shrink-0 rounded-full bg-zinc-200 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-zinc-600">Passé</span>
+                </div>
                 <p class="mt-1 text-sm text-zinc-600">{{ $start.Format "02/01/2006 15:04" }}{{ if $hasEnd }} - {{ $end.Format "02/01/2006 15:04" }}{{ end }}</p>
                 {{ with .Params.location }}<p class="mt-1 text-sm text-zinc-700">{{ . }}</p>{{ end }}
                 <div class="copy mt-3 text-sm leading-6 text-zinc-700">{{ .Summary }}</div>
+                <p class="mt-3">
+                  <a href="{{ .RelPermalink }}" class="text-sm font-medium text-zinc-900 underline underline-offset-4 hover:text-zinc-700">
+                    Lire plus...
+                  </a>
+                </p>
                 {{ with .Params.tags }}
                   <ul class="mt-3 flex flex-wrap gap-2">
                     {{ range . }}<li class="rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-700">{{ . }}</li>{{ end }}
@@ -236,7 +248,7 @@
       <ul class="space-y-3">
         {{ range sort .Pages "Params.category" "asc" }}
           {{ $page := . }}
-          <li class="card">
+          <li class="panel">
             <div class="flex items-start justify-between gap-3">
               {{ with $page.Params.external_url }}
                 <a href="{{ . }}" target="_blank" rel="noreferrer" class="font-semibold text-zinc-900 underline-offset-4 hover:underline">{{ $page.Title }}</a>
@@ -257,7 +269,7 @@
       {{ if .Pages }}
         <ul class="space-y-3">
           {{ range .Pages.ByWeight }}
-            <li class="card">
+            <li class="panel">
               <a href="{{ .RelPermalink }}" class="font-semibold hover:underline">{{ .Title }}</a>
               <div class="copy mt-1 text-sm leading-6 text-zinc-700">{{ .Summary }}</div>
             </li>

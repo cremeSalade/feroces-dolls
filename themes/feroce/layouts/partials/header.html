@@ -1,20 +1,27 @@
-<header class="site-header border-b border-zinc-200 bg-white/90">
+<header class="site-header">
   <div class="container-feroce py-8">
-    <h1 class="site-title text-center text-3xl font-extrabold tracking-tight text-zinc-900">
+    <h1 class="site-title text-center text-3xl font-extrabold tracking-tight">
       <a href="{{ site.Home.RelPermalink }}" class="brand-link inline-flex items-center gap-3">
-        <img src="{{ "fd_icon.png" | relURL }}" alt="Icône Féroces Dolls" class="brand-icon h-9 w-9 rounded-md object-cover">
+        <img src="{{ "fd_icon.png" | relURL }}" alt="Icone Feroce Dolls" width="36" height="36" loading="eager" decoding="sync" fetchpriority="high" class="brand-icon brand-icon-light h-9 w-9 rounded-md object-cover">
+        <img src="{{ "fd_icon_w.png" | relURL }}" alt="" aria-hidden="true" width="36" height="36" loading="eager" decoding="sync" fetchpriority="high" class="brand-icon brand-icon-dark h-9 w-9 rounded-md object-cover">
         <span>{{ site.Title }}</span>
       </a>
     </h1>
 
-    {{ with site.Menus.main }}
-      <nav class="site-nav mt-6 flex flex-wrap items-center justify-center gap-2" aria-label="Navigation principale">
-        {{ range . }}
-          {{ $isActive := $.IsMenuCurrent "main" . }}
-          {{ if not $isActive }}{{ $isActive = $.HasMenuCurrent "main" . }}{{ end }}
-          <a href="{{ .URL }}" class="link-main {{ if $isActive }}link-main-active{{ end }}">{{ .Name }}</a>
-        {{ end }}
-      </nav>
-    {{ end }}
+    <div class="mt-6 flex flex-wrap items-center justify-center gap-2">
+      {{ with site.Menus.main }}
+        <nav class="site-nav flex flex-wrap items-center justify-center gap-2" aria-label="Navigation principale">
+          {{ range . }}
+            {{ $isActive := $.IsMenuCurrent "main" . }}
+            {{ if not $isActive }}{{ $isActive = $.HasMenuCurrent "main" . }}{{ end }}
+            <a href="{{ .URL }}" class="link-main {{ if $isActive }}link-main-active{{ end }}">{{ .Name }}</a>
+          {{ end }}
+        </nav>
+      {{ end }}
+
+      <button id="theme-toggle" type="button" class="theme-toggle" data-theme="light" aria-pressed="false" aria-label="Activer le mode sombre" title="Activer le mode sombre">
+        <span class="theme-toggle-icon" aria-hidden="true"></span>
+      </button>
+    </div>
   </div>
 </header>

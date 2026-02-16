@@ -5,9 +5,13 @@
 @layer base {
   :root {
     --fd-bg: #f8eaf3;
+    --fd-chrome-bg: #ffffff;
+    --fd-chrome-border: #e8d4e1;
     --fd-surface: #ffffff;
+    --fd-surface-muted: #fcf7fb;
     --fd-ink: #2f2230;
     --fd-ink-soft: #947c8c;
+    --fd-muted-title: #5f4a5b;
     --fd-line: #e8d4e1;
     --fd-accent: #6c2062;
     --fd-accent-soft: #cc84bc;
@@ -16,6 +20,24 @@
     --fd-shadow-soft: 0 1px 2px rgba(108, 32, 98, 0.08);
     --fd-font-body: "Source Sans 3", "Noto Sans", "Liberation Sans", sans-serif;
     --fd-font-display: "Nunito Sans", "Source Sans 3", "Noto Sans", sans-serif;
+  }
+
+  [data-theme="dark"] {
+    color-scheme: dark;
+    --fd-bg: #16131a;
+    --fd-chrome-bg: #1f1925;
+    --fd-chrome-border: #44384e;
+    --fd-surface: #231c2a;
+    --fd-surface-muted: #1d1723;
+    --fd-ink: #f7edf6;
+    --fd-ink-soft: #c5afc0;
+    --fd-muted-title: #cfbdd0;
+    --fd-line: #3f3448;
+    --fd-accent: #cc84bc;
+    --fd-accent-soft: #6c2062;
+    --fd-link: #efc6e5;
+    --fd-focus: #7ba5c3;
+    --fd-shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.45);
   }
 
   body {
@@ -66,12 +88,21 @@
 
   .site-header,
   .site-footer {
-    border-color: transparent;
-    background: var(--fd-bg);
+    border-color: var(--fd-chrome-border);
+    background: var(--fd-chrome-bg);
+  }
+
+  .site-header {
+    border-bottom: 1px solid var(--fd-chrome-border);
+  }
+
+  .site-footer {
+    border-top: 1px solid var(--fd-chrome-border);
   }
 
   .site-main {
     @apply py-10 sm:py-12;
+    animation: fd-page-in 140ms ease-out;
   }
 
   .brand-link {
@@ -86,6 +117,18 @@
     box-shadow: none;
   }
 
+  .brand-icon-dark {
+    display: none;
+  }
+
+  [data-theme="dark"] .brand-icon-light {
+    display: none;
+  }
+
+  [data-theme="dark"] .brand-icon-dark {
+    display: block;
+  }
+
   .site-nav {
     @apply rounded-xl p-1;
     background: transparent;
@@ -93,7 +136,8 @@
     box-shadow: none;
   }
 
-  .card {
+  .card,
+  .panel {
     @apply rounded-xl p-5;
     background: var(--fd-surface);
     border-width: 0;
@@ -105,6 +149,55 @@
   .card:hover {
     box-shadow: 0 4px 10px rgba(108, 32, 98, 0.12);
     transform: translateY(-1px);
+  }
+
+  .agenda-past {
+    background: var(--fd-surface-muted);
+    border-width: 1px;
+    border-color: var(--fd-line);
+    box-shadow: none;
+  }
+
+  .agenda-past h4 {
+    color: var(--fd-muted-title);
+  }
+
+  .theme-toggle {
+    @apply inline-flex h-8 w-10 items-center justify-center rounded-full p-0;
+    color: var(--fd-ink-soft);
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .theme-toggle:hover {
+    color: var(--fd-ink);
+  }
+
+  .theme-toggle-icon {
+    position: relative;
+    display: block;
+    width: 1.75rem;
+    height: 0.95rem;
+    border-radius: 9999px;
+    border: 1px solid var(--fd-line);
+    background: var(--fd-surface-muted);
+  }
+
+  .theme-toggle-icon::before {
+    content: "";
+    position: absolute;
+    border-radius: 9999px;
+    top: 0.08rem;
+    left: 0.08rem;
+    width: 0.68rem;
+    height: 0.68rem;
+    background: var(--fd-accent);
+    transition: transform 120ms ease;
+  }
+
+  .theme-toggle[data-theme="dark"] .theme-toggle-icon::before {
+    transform: translateX(0.79rem);
   }
 
   .link-main {
@@ -150,5 +243,55 @@
 
   .skip-link:focus-visible {
     @apply not-sr-only;
+  }
+
+  [data-theme="dark"] .text-zinc-900 {
+    color: #f7edf6;
+  }
+
+  [data-theme="dark"] .text-zinc-800 {
+    color: #e7d7e5;
+  }
+
+  [data-theme="dark"] .text-zinc-700 {
+    color: #d8c5d6;
+  }
+
+  [data-theme="dark"] .text-zinc-600 {
+    color: #bea9bc;
+  }
+
+  [data-theme="dark"] .text-zinc-500 {
+    color: #a893a6;
+  }
+
+  [data-theme="dark"] .bg-zinc-100 {
+    background-color: #302738;
+  }
+
+  [data-theme="dark"] .bg-zinc-200 {
+    background-color: #3a3042;
+  }
+
+  [data-theme="dark"] .border-zinc-200 {
+    border-color: #3f3448;
+  }
+
+  [data-theme="dark"] .border-zinc-300 {
+    border-color: #564a60;
+  }
+
+  [data-theme="dark"] .border-zinc-400 {
+    border-color: #6b5d76;
+  }
+}
+
+@keyframes fd-page-in {
+  from {
+    opacity: 0.985;
+  }
+
+  to {
+    opacity: 1;
   }
 }

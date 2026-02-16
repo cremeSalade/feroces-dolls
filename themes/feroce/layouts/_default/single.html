@@ -27,13 +27,13 @@
   {{ end }}
 
   {{ if and (eq .Section "blog") (gt .Date.Unix (now).Unix) }}
-    <article class="space-y-4">
+    <article class="panel space-y-4">
       <h2 class="text-3xl font-bold tracking-tight">{{ .Title }}</h2>
       <p class="text-zinc-700">Cet article sera publié le {{ .Date.Format "02/01/2006" }}.</p>
     </article>
   {{ else }}
-    <article class="space-y-6">
-      <header class="space-y-2">
+    <article class="space-y-4">
+      <header class="space-y-4">
         <h2 class="text-3xl font-bold tracking-tight">{{ .Title }}</h2>
         {{ if eq .Section "blog" }}
           <p class="text-sm text-zinc-500">{{ .Date.Format "02/01/2006" }}</p>
@@ -63,7 +63,7 @@
           {{ $hasEnd = true }}
         {{ end }}
 
-        <section class="card border-l-4" style="border-left-color: {{ .Params.color | default "#18181b" }};">
+        <section class="panel border-l-4" style="border-left-color: {{ .Params.color | default "#18181b" }};">
           <p class="text-sm text-zinc-700">
             {{ $start.Format "02/01/2006 15:04" }}{{ if $hasEnd }} - {{ $end.Format "02/01/2006 15:04" }}{{ end }}
           </p>
@@ -99,8 +99,10 @@
         {{ end }}
       {{ end }}
 
-      <div class="copy max-w-none leading-7 text-zinc-800">
-        {{ .Content }}
+      <div class="panel">
+        <div class="copy max-w-none leading-7 text-zinc-800">
+          {{ .Content }}
+        </div>
       </div>
     </article>
   {{ end }}

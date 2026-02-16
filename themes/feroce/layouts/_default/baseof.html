@@ -11,5 +11,37 @@
       {{ block "main" . }}{{ end }}
     </main>
     {{ partial "footer.html" . }}
+    <script>
+      (() => {
+        const key = "fd-theme";
+        const root = document.documentElement;
+        const button = document.getElementById("theme-toggle");
+        const metaTheme = document.getElementById("theme-color-meta");
+        if (!button) return;
+
+        const labels = { light: "Activer le mode sombre", dark: "Activer le mode clair" };
+        const colors = { light: "#f8eaf3", dark: "#16131a" };
+
+        const applyTheme = (theme) => {
+          root.setAttribute("data-theme", theme);
+          button.setAttribute("aria-pressed", String(theme === "dark"));
+          button.setAttribute("aria-label", labels[theme] || labels.light);
+          button.setAttribute("title", labels[theme] || labels.light);
+          button.setAttribute("data-theme", theme);
+          if (metaTheme) metaTheme.setAttribute("content", colors[theme] || colors.light);
+        };
+
+        const current = root.getAttribute("data-theme") === "dark" ? "dark" : "light";
+        applyTheme(current);
+
+        button.addEventListener("click", () => {
+          const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+          applyTheme(next);
+          try {
+            localStorage.setItem(key, next);
+          } catch (_) {}
+        });
+      })();
+    </script>
   </body>
 </html>

@@ -1,7 +1,9 @@
 {{ define "main" }}
   <section class="space-y-8">
-    <div class="copy max-w-none leading-7 text-zinc-800">
-      {{ .Content }}
+    <div class="panel">
+      <div class="copy max-w-none leading-7 text-zinc-800">
+        {{ .Content }}
+      </div>
     </div>
 
     <section aria-labelledby="activites" class="space-y-4">
@@ -27,7 +29,7 @@
             {{ end }}
           {{ end }}
 
-          <article class="card mb-4 break-inside-avoid overflow-hidden p-0">
+          <article class="panel mb-4 break-inside-avoid overflow-hidden p-0">
             {{ if $imgURL }}
               <div class="aspect-video bg-zinc-100">
                 <img
