@@ -1,12 +1,14 @@
 {{ define "main" }}
   <section class="space-y-8">
+    <h2 class="text-3xl font-bold tracking-tight">Le collectif</h2>
+
     <div class="panel">
       <div class="copy max-w-none leading-7 text-zinc-800">
         {{ .Content }}
       </div>
     </div>
 
-    <section aria-labelledby="activites" class="space-y-4">
+    <section aria-labelledby="activites" class="space-y-6">
       <h2 id="activites" class="text-2xl font-bold">Nos activités</h2>
       <div class="columns-1 gap-4 sm:columns-2 xl:columns-2">
         {{ range (where site.RegularPages "Section" "activites").ByWeight }}

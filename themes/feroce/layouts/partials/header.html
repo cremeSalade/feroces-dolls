@@ -8,20 +8,35 @@
       </a>
     </h1>
 
-    <div class="mt-6 flex flex-wrap items-center justify-center gap-2">
+    <div class="site-header-controls mt-6">
       {{ with site.Menus.main }}
-        <nav class="site-nav flex flex-wrap items-center justify-center gap-2" aria-label="Navigation principale">
+        <nav class="site-nav" aria-label="Navigation principale">
           {{ range . }}
             {{ $isActive := $.IsMenuCurrent "main" . }}
             {{ if not $isActive }}{{ $isActive = $.HasMenuCurrent "main" . }}{{ end }}
+            {{ if not $isActive }}
+              {{ $menuPath := strings.TrimSuffix "/" .URL }}
+              {{ $currentPath := strings.TrimSuffix "/" $.RelPermalink }}
+              {{ if eq $menuPath "" }}{{ $menuPath = "/" }}{{ end }}
+              {{ if eq $currentPath "" }}{{ $currentPath = "/" }}{{ end }}
+              {{ if eq $menuPath "/" }}
+                {{ $isActive = eq $currentPath "/" }}
+              {{ else }}
+                {{ $isActive = or (eq $currentPath $menuPath) (hasPrefix $currentPath (printf "%s/" $menuPath)) }}
+              {{ end }}
+            {{ end }}
             <a href="{{ .URL }}" class="link-main {{ if $isActive }}link-main-active{{ end }}">{{ .Name }}</a>
           {{ end }}
-        </nav>
-      {{ end }}
 
-      <button id="theme-toggle" type="button" class="theme-toggle" data-theme="light" aria-pressed="false" aria-label="Activer le mode sombre" title="Activer le mode sombre">
-        <span class="theme-toggle-icon" aria-hidden="true"></span>
-      </button>
+          <button id="theme-toggle" type="button" class="theme-toggle theme-toggle-nav" data-theme="light" aria-pressed="false" aria-label="Activer le mode sombre" title="Activer le mode sombre">
+            <span class="theme-toggle-icon" aria-hidden="true"></span>
+          </button>
+        </nav>
+      {{ else }}
+        <button id="theme-toggle" type="button" class="theme-toggle theme-toggle-nav" data-theme="light" aria-pressed="false" aria-label="Activer le mode sombre" title="Activer le mode sombre">
+          <span class="theme-toggle-icon" aria-hidden="true"></span>
+        </button>
+      {{ end }}
     </div>
   </div>
 </header>

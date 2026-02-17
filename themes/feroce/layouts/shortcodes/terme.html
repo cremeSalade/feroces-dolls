@@ -1,0 +1,15 @@
+{{- $slug := .Get 0 | default (.Get "slug") -}}
+{{- $label := .Get 1 | default (.Get "label") -}}
+{{- if not $slug -}}
+  {{- errorf "Shortcode 'terme' sans slug dans %s" .Page.File.Path -}}
+{{- end -}}
+
+{{- $path := printf "/glossaire/%s" $slug -}}
+{{- with site.GetPage $path -}}
+  {{- $text := $label | default .Title -}}
+  <a href="{{ .RelPermalink }}" class="terme-link" title="{{ .Summary }}">{{ $text }}</a>
+{{- else -}}
+  {{- $fallback := $label | default $slug -}}
+  <span class="terme-missing">{{ $fallback }}</span>
+  {{- warnf "Shortcode 'terme': entrée glossaire introuvable '%s' dans %s" $slug $.Page.File.Path -}}
+{{- end -}}

@@ -23,6 +23,15 @@ buildFuture = true
     [markup.goldmark.renderer]
       hardWraps = true
 
+[mediaTypes."text/calendar"]
+  suffixes = ["ics"]
+
+[outputFormats.ICS]
+  mediaType = "text/calendar"
+  baseName = "index"
+  isPlainText = true
+  notAlternative = true
+
 [[menus.main]]
   name = 'Accueil'
   pageRef = '/'
@@ -47,6 +56,11 @@ buildFuture = true
   name = 'Ressources'
   pageRef = '/ressources'
   weight = 50
+
+[[menus.main]]
+  name = 'Glossaire'
+  pageRef = '/glossaire'
+  weight = 55
 
 [[menus.main]]
   name = 'Contact'

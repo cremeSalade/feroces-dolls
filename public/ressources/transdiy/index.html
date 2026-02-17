@@ -1,7 +1,305 @@
-<!doctype html><html lang=fr-FR><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Subreddit TransDIY | Féroces Dolls</title><meta name=description content="Plein de ressources, possibilité de poser des questions et d’obtenir des réponses rapidement."><link rel=canonical href=https://ferocesdolls.org/ressources/transdiy/><link rel=icon type=image/png href=/fd_icon.png><meta property="og:site_name" content="Féroces Dolls"><meta property="og:title" content="Subreddit TransDIY | Féroces Dolls"><meta property="og:description" content="Plein de ressources, possibilité de poser des questions et d’obtenir des réponses rapidement."><meta property="og:url" content="https://ferocesdolls.org/ressources/transdiy/"><meta property="og:image" content="https://ferocesdolls.org/fd_icon.png"><meta property="og:locale" content="fr_FR"><meta property="og:type" content="article"><meta name=twitter:card content="summary_large_image"><meta name=twitter:title content="Subreddit TransDIY | Féroces Dolls"><meta name=twitter:description content="Plein de ressources, possibilité de poser des questions et d’obtenir des réponses rapidement."><meta name=twitter:image content="https://ferocesdolls.org/fd_icon.png"><link rel=me href=https://piaille.fr/@ferocesdolls><link rel=stylesheet href=/css/main.min.0bc161f5335ff0ccf5887dae95f01bd8f8ffb199af7865f4e0fce515f962a8f7.css integrity="sha256-C8Fh9TNf8Mz1iH2ulfAb2Pj/sZmveGX04PzlFfliqPc="></head><body class=site-body><a href=#main-content class=skip-link>Aller au contenu</a><header class="site-header border-b border-zinc-200 bg-white/90"><div class="container-feroce py-8"><h1 class="site-title text-center text-3xl font-extrabold tracking-tight text-zinc-900"><a href=/ class="brand-link inline-flex items-center gap-3"><img src=/fd_icon.png alt="Icône Féroces Dolls" class="brand-icon h-9 w-9 rounded-md object-cover">
-<span>Féroces Dolls</span></a></h1><nav class="site-nav mt-6 flex flex-wrap items-center justify-center gap-2" aria-label="Navigation principale"><a href=/ class=link-main>Accueil</a>
-<a href=/blog/ class=link-main>Blog</a>
-<a href=/agenda/ class=link-main>Agenda</a>
-<a href=/dons/ class=link-main>Dons</a>
-<a href=/ressources/ class="link-main link-main-active">Ressources</a>
-<a href=/contact/ class=link-main>Contact</a></nav></div></header><main id=main-content class="site-main container-feroce py-10 sm:py-12"><nav aria-label="Fil d'Ariane" class=mb-6><ol class="flex flex-wrap items-center gap-2 text-sm text-zinc-600"><li><a href=/ class="hover:text-zinc-900 hover:underline">Accueil</a></li><li aria-hidden=true class=text-zinc-400>/</li><li><a href=/ressources/ class="hover:text-zinc-900 hover:underline">Ressources</a></li><li aria-hidden=true class=text-zinc-400>/</li><li aria-current=page class="font-medium text-zinc-900">Subreddit TransDIY</li></ol></nav><article class=space-y-6><header class=space-y-2><h2 class="text-3xl font-bold tracking-tight">Subreddit TransDIY</h2></header><p><a class="inline-block rounded-md bg-zinc-900 px-3 py-2 text-sm font-medium text-white" href=https://www.reddit.com/r/TransDIY/ target=_blank rel=noreferrer>Voir la ressource</a></p><div class="copy max-w-none leading-7 text-zinc-800"><p>Plein de ressources, possibilité de poser des questions et d&rsquo;obtenir des réponses rapidement.</p></div></article></main><footer class="site-footer border-t border-zinc-200 bg-white/80"><div class="container-feroce flex flex-wrap items-center justify-between gap-3 py-6 text-sm text-zinc-600"><p class="font-medium text-zinc-700">Féroces Dolls</p><ul class="flex flex-wrap items-center gap-4"><li><a href=mailto:reseautransfem-contact@lebib.org class="underline underline-offset-4 hover:text-zinc-900">reseautransfem-contact@lebib.org</a></li><li><a href=https://www.instagram.com/ferocesdolls/ target=_blank rel=noreferrer class="underline underline-offset-4 hover:text-zinc-900">Instagram</a></li><li><a href=https://piaille.fr/@ferocesdolls target=_blank rel="me noreferrer" class="underline underline-offset-4 hover:text-zinc-900">Mastodon</a></li></ul></div></footer></body></html>
+<!doctype html>
+<html lang="fr-FR">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta id="theme-color-meta" name="theme-color" content="#f8eaf3">
+<script>
+  (() => {
+    const key = "fd-theme";
+    const root = document.documentElement;
+    const darkColor = "#16131a";
+    const lightColor = "#f8eaf3";
+    let theme = "light";
+
+    try {
+      const stored = localStorage.getItem(key);
+      if (stored === "light" || stored === "dark") {
+        theme = stored;
+      } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        theme = "dark";
+      }
+    } catch (_) {
+      if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        theme = "dark";
+      }
+    }
+
+    root.setAttribute("data-theme", theme);
+    const metaTheme = document.getElementById("theme-color-meta");
+    if (metaTheme) metaTheme.setAttribute("content", theme === "dark" ? darkColor : lightColor);
+  })();
+</script>
+<style>
+  html, body { background-color: #f8eaf3; color: #2f2230; }
+  html[data-theme="dark"], html[data-theme="dark"] body { background-color: #16131a; color: #f7edf6; }
+  .brand-icon { width: 36px; height: 36px; display: block; }
+  .brand-icon-dark { display: none; }
+  html[data-theme="dark"] .brand-icon-light { display: none; }
+  html[data-theme="dark"] .brand-icon-dark { display: block; }
+</style>
+
+
+
+
+
+
+
+<title>Subreddit TransDIY | Féroces Dolls</title>
+<meta name="description" content="Plein de ressources sur le DIY, avec possibilité de poser des questions et d’obtenir des réponses rapidement.">
+<link rel="canonical" href="http://localhost:1313/ressources/transdiy/">
+<link rel="icon" type="image/png" href="/fd_icon.png">
+
+<meta property="og:site_name" content="Féroces Dolls">
+<meta property="og:title" content="Subreddit TransDIY | Féroces Dolls">
+<meta property="og:description" content="Plein de ressources sur le DIY, avec possibilité de poser des questions et d’obtenir des réponses rapidement.">
+<meta property="og:url" content="http://localhost:1313/ressources/transdiy/">
+<meta property="og:image" content="http://localhost:1313/fd_icon.png">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:type" content="article">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Subreddit TransDIY | Féroces Dolls">
+<meta name="twitter:description" content="Plein de ressources sur le DIY, avec possibilité de poser des questions et d’obtenir des réponses rapidement.">
+<meta name="twitter:image" content="http://localhost:1313/fd_icon.png">
+
+
+
+
+  <link rel="me" href="https://piaille.fr/@ferocesdolls">
+
+
+
+<link rel="preload" href="/css/main.min.3a77de537ef5feecc3160e351c4fec95485135d366fd5a610c922e231716bdcf.css" as="style" integrity="sha256-OnfeU371/uzDFg41HE/slUhRNdNm/VphDJIuIxcWvc8=">
+<link rel="stylesheet" href="/css/main.min.3a77de537ef5feecc3160e351c4fec95485135d366fd5a610c922e231716bdcf.css" integrity="sha256-OnfeU371/uzDFg41HE/slUhRNdNm/VphDJIuIxcWvc8=">
+
+  </head>
+  <body class="site-body">
+    <a href="#main-content" class="skip-link">Aller au contenu</a>
+    <header class="site-header">
+  <div class="container-feroce py-8">
+    <h1 class="site-title text-center text-3xl font-extrabold tracking-tight">
+      <a href="/" class="brand-link inline-flex items-center gap-3">
+        <img src="/fd_icon.png" alt="Icone Feroce Dolls" width="36" height="36" loading="eager" decoding="sync" fetchpriority="high" class="brand-icon brand-icon-light h-9 w-9 rounded-md object-cover">
+        <img src="/fd_icon_w.png" alt="" aria-hidden="true" width="36" height="36" loading="eager" decoding="sync" fetchpriority="high" class="brand-icon brand-icon-dark h-9 w-9 rounded-md object-cover">
+        <span>Féroces Dolls</span>
+      </a>
+    </h1>
+
+    <div class="site-header-controls mt-6">
+      
+        <nav class="site-nav" aria-label="Navigation principale">
+          
+            
+            
+            
+              
+              
+              
+              
+              
+                
+              
+            
+            <a href="/" class="link-main ">Accueil</a>
+          
+            
+            
+            
+              
+              
+              
+              
+              
+                
+              
+            
+            <a href="/blog/" class="link-main ">Blog</a>
+          
+            
+            
+            
+              
+              
+              
+              
+              
+                
+              
+            
+            <a href="/agenda/" class="link-main ">Agenda</a>
+          
+            
+            
+            
+              
+              
+              
+              
+              
+                
+              
+            
+            <a href="/dons/" class="link-main ">Dons</a>
+          
+            
+            
+            
+            <a href="/ressources/" class="link-main link-main-active">Ressources</a>
+          
+            
+            
+            
+              
+              
+              
+              
+              
+                
+              
+            
+            <a href="/glossaire/" class="link-main ">Glossaire</a>
+          
+            
+            
+            
+              
+              
+              
+              
+              
+                
+              
+            
+            <a href="/contact/" class="link-main ">Contact</a>
+          
+
+          <button id="theme-toggle" type="button" class="theme-toggle theme-toggle-nav" data-theme="light" aria-pressed="false" aria-label="Activer le mode sombre" title="Activer le mode sombre">
+            <span class="theme-toggle-icon" aria-hidden="true"></span>
+          </button>
+        </nav>
+      
+    </div>
+  </div>
+</header>
+
+    <main id="main-content" class="site-main container-feroce py-10 sm:py-12">
+      
+  
+  <nav aria-label="Fil d'Ariane" class="mb-6">
+    <ol class="flex flex-wrap items-center gap-2 text-sm text-zinc-600">
+      
+        
+        <li>
+          <a href="/" class="hover:text-zinc-900 hover:underline">
+            Accueil
+          </a>
+        </li>
+      
+        
+          <li aria-hidden="true" class="text-zinc-400">/</li>
+        
+        <li>
+          <a href="/ressources/" class="hover:text-zinc-900 hover:underline">
+            Ressources
+          </a>
+        </li>
+      
+
+      
+        <li aria-hidden="true" class="text-zinc-400">/</li>
+      
+
+      <li aria-current="page" class="font-medium text-zinc-900">Subreddit TransDIY</li>
+    </ol>
+  </nav>
+
+
+      
+  
+  
+  
+  
+
+  
+    <article class="space-y-8">
+      <header class="space-y-4">
+        <h2 class="text-3xl font-bold tracking-tight">Subreddit TransDIY</h2>
+        
+      </header>
+
+      
+
+      
+
+      
+        <p>
+          <a class="btn btn-primary" href="https://www.reddit.com/r/TransDIY/" target="_blank" rel="noreferrer">Voir la ressource</a>
+        </p>
+        
+      
+
+      <div class="panel">
+        <div class="copy max-w-none leading-7 text-zinc-800">
+          <p>Plein de ressources sur le <a href="/glossaire/diy/" class="terme-link" title="Pratiques d&rsquo;auto-organisation et d&rsquo;auto-médication autour des traitements hormones, souvent pour s&rsquo;en procurer de manière non officielle.">DIY</a>, avec possibilité de poser des questions et d&rsquo;obtenir des réponses rapidement.</p>
+
+        </div>
+      </div>
+    </article>
+  
+
+    </main>
+    <footer class="site-footer">
+  <div class="container-feroce flex flex-wrap items-center justify-between gap-3 py-6 text-sm text-zinc-600">
+    <p class="font-medium text-zinc-700">Féroces Dolls</p>
+    <ul class="flex flex-wrap items-center gap-4">
+      
+        <li><a href="mailto:reseautransfem-contact@lebib.org" class="underline underline-offset-4 hover:text-zinc-900">reseautransfem-contact@lebib.org</a></li>
+      
+      
+        <li><a href="https://www.instagram.com/ferocesdolls/" target="_blank" rel="noreferrer" class="underline underline-offset-4 hover:text-zinc-900">Instagram</a></li>
+      
+      
+        <li><a href="https://piaille.fr/@ferocesdolls" target="_blank" rel="me noreferrer" class="underline underline-offset-4 hover:text-zinc-900">Mastodon</a></li>
+      
+    </ul>
+  </div>
+</footer>
+
+    <script>
+      (() => {
+        const key = "fd-theme";
+        const root = document.documentElement;
+        const button = document.getElementById("theme-toggle");
+        const metaTheme = document.getElementById("theme-color-meta");
+        if (!button) return;
+
+        const labels = { light: "Activer le mode sombre", dark: "Activer le mode clair" };
+        const colors = { light: "#f8eaf3", dark: "#16131a" };
+
+        const applyTheme = (theme) => {
+          root.setAttribute("data-theme", theme);
+          button.setAttribute("aria-pressed", String(theme === "dark"));
+          button.setAttribute("aria-label", labels[theme] || labels.light);
+          button.setAttribute("title", labels[theme] || labels.light);
+          button.setAttribute("data-theme", theme);
+          if (metaTheme) metaTheme.setAttribute("content", colors[theme] || colors.light);
+          document.dispatchEvent(new CustomEvent("fd:theme-change", { detail: { theme } }));
+        };
+
+        const current = root.getAttribute("data-theme") === "dark" ? "dark" : "light";
+        applyTheme(current);
+
+        button.addEventListener("click", () => {
+          const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+          applyTheme(next);
+          try {
+            localStorage.setItem(key, next);
+          } catch (_) {}
+        });
+      })();
+    </script>
+    
+  </body>
+</html>

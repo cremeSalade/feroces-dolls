@@ -1,0 +1,46 @@
+{{- $start := .Date -}}
+{{- with .Params.start }}{{ $start = time.AsTime . }}{{ end -}}
+{{- $end := $start -}}
+{{- $hasEnd := false -}}
+{{- with .Params.end }}{{ $end = time.AsTime . }}{{ $hasEnd = true }}{{ end -}}
+
+{{- $summary := .Title | plainify | htmlUnescape | strings.TrimSpace -}}
+{{- $description := .Plain | plainify | htmlUnescape | strings.TrimSpace -}}
+{{- $location := .Params.location | default "" | plainify | htmlUnescape | strings.TrimSpace -}}
+
+{{- $summary = replace $summary "\\" "\\\\" -}}
+{{- $summary = replace $summary ";" "\\;" -}}
+{{- $summary = replace $summary "," "\\," -}}
+{{- $summary = replace $summary "\r\n" "\\n" -}}
+{{- $summary = replace $summary "\n" "\\n" -}}
+
+{{- $description = replace $description "\\" "\\\\" -}}
+{{- $description = replace $description ";" "\\;" -}}
+{{- $description = replace $description "," "\\," -}}
+{{- $description = replace $description "\r\n" "\\n" -}}
+{{- $description = replace $description "\n" "\\n" -}}
+
+{{- $location = replace $location "\\" "\\\\" -}}
+{{- $location = replace $location ";" "\\;" -}}
+{{- $location = replace $location "," "\\," -}}
+{{- $location = replace $location "\r\n" "\\n" -}}
+{{- $location = replace $location "\n" "\\n" -}}
+
+{{- printf "BEGIN:VCALENDAR\r\n" -}}
+{{- printf "VERSION:2.0\r\n" -}}
+{{- printf "PRODID:-//Feroces Dolls//Agenda//FR\r\n" -}}
+{{- printf "CALSCALE:GREGORIAN\r\n" -}}
+{{- printf "METHOD:PUBLISH\r\n" -}}
+{{- printf "BEGIN:VEVENT\r\n" -}}
+{{- printf "UID:%s@ferocesdolls.org\r\n" .File.UniqueID -}}
+{{- printf "DTSTAMP:%s\r\n" (now.UTC.Format "20060102T150405Z") -}}
+{{- printf "DTSTART:%s\r\n" ($start.UTC.Format "20060102T150405Z") -}}
+{{- if $hasEnd }}{{ printf "DTEND:%s\r\n" ($end.UTC.Format "20060102T150405Z") }}{{ end -}}
+{{- printf "SUMMARY:%s\r\n" $summary -}}
+{{- if ne $description "" }}{{ printf "DESCRIPTION:%s\r\n" $description }}{{ end -}}
+{{- if ne $location "" }}{{ printf "LOCATION:%s\r\n" $location }}{{ end -}}
+{{- printf "URL:%s\r\n" .Permalink -}}
+{{- printf "STATUS:CONFIRMED\r\n" -}}
+{{- printf "TRANSP:OPAQUE\r\n" -}}
+{{- printf "END:VEVENT\r\n" -}}
+{{- printf "END:VCALENDAR\r\n" -}}

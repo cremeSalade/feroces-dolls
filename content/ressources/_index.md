@@ -3,4 +3,4 @@ title = 'Ressources'
 draft = false
 +++
 
-Une sélection de ressources utiles.
+Des ressources utiles, des assos locales sympa, des copaines, des articles intéressants...

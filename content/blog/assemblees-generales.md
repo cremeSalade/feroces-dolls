@@ -1,6 +1,8 @@
 +++
 title = 'Assemblées Générales des Féroces Dolls'
 date = 2025-12-06T14:00:00+01:00
+image = 'pas_de_medecins.jpg'
+image_alt = 'cadre de serigraphie avec marqué pas besoin de medecins pour avoir des seins'
 draft = false
 +++
 

@@ -7,6 +7,7 @@ location = ''
 post_ref = ''
 color = '#18181b'
 tags = []
+outputs = ['HTML', 'ICS']
 draft = true
 +++
 

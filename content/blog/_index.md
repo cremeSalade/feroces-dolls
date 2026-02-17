@@ -3,4 +3,4 @@ title = 'Blog'
 draft = false
 +++
 
-Retrouvez ici les annonces et actus du collectif.
+Les annonces et articles du collectif. Les textes qu'on lit en publique parfois.

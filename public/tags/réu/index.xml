@@ -1,1 +1,40 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Réu on Féroces Dolls</title><link>https://ferocesdolls.org/tags/r%C3%A9u/</link><description>Recent content in Réu on Féroces Dolls</description><generator>Hugo</generator><language>fr-FR</language><lastBuildDate>Sat, 09 May 2026 14:00:00 +0200</lastBuildDate><atom:link href="https://ferocesdolls.org/tags/r%C3%A9u/index.xml" rel="self" type="application/rss+xml"/><item><title>Assemblée Générale mai 2026</title><link>https://ferocesdolls.org/agenda/ag-2026-05-09/</link><pubDate>Sat, 09 May 2026 14:00:00 +0200</pubDate><guid>https://ferocesdolls.org/agenda/ag-2026-05-09/</guid><description>&lt;p&gt;Assemblée générale des Dolls !&lt;/p&gt;</description></item><item><title>Assemblée Générale mars 2026</title><link>https://ferocesdolls.org/agenda/ag-2026-03-07/</link><pubDate>Sat, 07 Mar 2026 14:00:00 +0100</pubDate><guid>https://ferocesdolls.org/agenda/ag-2026-03-07/</guid><description>&lt;p&gt;Assemblée générale des Dolls !&lt;/p&gt;</description></item><item><title>Assemblée Générale décembre 2025</title><link>https://ferocesdolls.org/agenda/ag-2025-12-06/</link><pubDate>Sat, 06 Dec 2025 14:00:00 +0100</pubDate><guid>https://ferocesdolls.org/agenda/ag-2025-12-06/</guid><description>&lt;p&gt;Assemblée générale des Dolls !&lt;/p&gt;</description></item><item><title>Assemblée Générale septembre 2025</title><link>https://ferocesdolls.org/agenda/ag-2025-09-27/</link><pubDate>Sat, 27 Sep 2025 14:00:00 +0200</pubDate><guid>https://ferocesdolls.org/agenda/ag-2025-09-27/</guid><description>&lt;p&gt;Assemblée générale des Dolls !&lt;/p&gt;</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Réu on Féroces Dolls</title>
+    <link>http://localhost:1313/tags/r%C3%A9u/</link>
+    <description>Recent content in Réu on Féroces Dolls</description>
+    <generator>Hugo</generator>
+    <language>fr-FR</language>
+    <lastBuildDate>Sat, 09 May 2026 14:00:00 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/r%C3%A9u/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Assemblée Générale mai 2026</title>
+      <link>http://localhost:1313/agenda/ag-2026-05-09/</link>
+      <pubDate>Sat, 09 May 2026 14:00:00 +0200</pubDate>
+      <guid>http://localhost:1313/agenda/ag-2026-05-09/</guid>
+      <description>&lt;p&gt;Assemblée générale des Dolls !&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Assemblée Générale mars 2026</title>
+      <link>http://localhost:1313/agenda/ag-2026-03-07/</link>
+      <pubDate>Sat, 07 Mar 2026 14:00:00 +0100</pubDate>
+      <guid>http://localhost:1313/agenda/ag-2026-03-07/</guid>
+      <description>&lt;p&gt;Assemblée générale des Dolls !&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Assemblée Générale décembre 2025</title>
+      <link>http://localhost:1313/agenda/ag-2025-12-06/</link>
+      <pubDate>Sat, 06 Dec 2025 14:00:00 +0100</pubDate>
+      <guid>http://localhost:1313/agenda/ag-2025-12-06/</guid>
+      <description>&lt;p&gt;Assemblée générale des Dolls !&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Assemblée Générale septembre 2025</title>
+      <link>http://localhost:1313/agenda/ag-2025-09-27/</link>
+      <pubDate>Sat, 27 Sep 2025 14:00:00 +0200</pubDate>
+      <guid>http://localhost:1313/agenda/ag-2025-09-27/</guid>
+      <description>&lt;p&gt;Assemblée générale des Dolls !&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

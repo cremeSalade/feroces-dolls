@@ -32,7 +32,7 @@
       <p class="text-zinc-700">Cet article sera publié le {{ .Date.Format "02/01/2006" }}.</p>
     </article>
   {{ else }}
-    <article class="space-y-4">
+    <article class="space-y-8">
       <header class="space-y-4">
         <h2 class="text-3xl font-bold tracking-tight">{{ .Title }}</h2>
         {{ if eq .Section "blog" }}
@@ -63,12 +63,23 @@
           {{ $hasEnd = true }}
         {{ end }}
 
-        <section class="panel border-l-4" style="border-left-color: {{ .Params.color | default "#18181b" }};">
+        {{ $eventColor := .Params.color | default "#18181b" }}
+        <section class="panel relative overflow-hidden pl-6">
+          <svg class="pointer-events-none absolute inset-y-0 left-0 h-full w-1" viewBox="0 0 4 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <rect x="0" y="0" width="4" height="100" fill="{{ $eventColor }}"></rect>
+          </svg>
           <p class="text-sm text-zinc-700">
             {{ $start.Format "02/01/2006 15:04" }}{{ if $hasEnd }} - {{ $end.Format "02/01/2006 15:04" }}{{ end }}
           </p>
           {{ with .Params.location }}
             <p class="mt-1 text-sm text-zinc-700">{{ . }}</p>
+          {{ end }}
+          {{ if ge ($start.Unix) (now).Unix }}
+            {{ with .OutputFormats.Get "ICS" }}
+              <p class="mt-3">
+                <a href="{{ .RelPermalink }}" download="{{ $.File.TranslationBaseName }}.ics" class="btn btn-secondary">Ajouter à l'agenda</a>
+              </p>
+            {{ end }}
           {{ end }}
           {{ with .Params.tags }}
             <ul class="mt-3 flex flex-wrap gap-2">
@@ -90,11 +101,11 @@
 
       {{ if and (eq .Section "ressources") .Params.external_url }}
         <p>
-          <a class="inline-block rounded-md bg-zinc-900 px-3 py-2 text-sm font-medium text-white" href="{{ .Params.external_url }}" target="_blank" rel="noreferrer">Voir la ressource</a>
+          <a class="btn btn-primary" href="{{ .Params.external_url }}" target="_blank" rel="noreferrer">Voir la ressource</a>
         </p>
         {{ with .Params.external_url_2 }}
           <p>
-            <a class="inline-block rounded-md border border-zinc-300 px-3 py-2 text-sm font-medium text-zinc-800" href="{{ . }}" target="_blank" rel="noreferrer">Voir la ressource 2</a>
+            <a class="btn btn-secondary" href="{{ . }}" target="_blank" rel="noreferrer">Voir la ressource 2</a>
           </p>
         {{ end }}
       {{ end }}

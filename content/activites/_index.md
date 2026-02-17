@@ -3,4 +3,4 @@ title = 'Activités'
 draft = false
 +++
 
-Les activités du collectif Féroces Dolls.
+Les différentes activités du collectif Féroces Dolls.

@@ -29,6 +29,7 @@
           button.setAttribute("title", labels[theme] || labels.light);
           button.setAttribute("data-theme", theme);
           if (metaTheme) metaTheme.setAttribute("content", colors[theme] || colors.light);
+          document.dispatchEvent(new CustomEvent("fd:theme-change", { detail: { theme } }));
         };
 
         const current = root.getAttribute("data-theme") === "dark" ? "dark" : "light";
@@ -43,5 +44,39 @@
         });
       })();
     </script>
+    {{ if .Page.Store.Get "hasMermaid" }}
+      <script src="{{ "vendor/mermaid.min.js" | relURL }}"></script>
+      <script>
+        (() => {
+          if (typeof mermaid === "undefined") return;
+          const getTheme = () =>
+            document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "default";
+
+          const renderMermaid = () => {
+            const nodes = Array.from(document.querySelectorAll("pre.mermaid"));
+            if (!nodes.length) return;
+
+            for (const node of nodes) {
+              if (!node.dataset.mermaidSource) {
+                node.dataset.mermaidSource = node.textContent || "";
+              }
+              node.removeAttribute("data-processed");
+              node.textContent = node.dataset.mermaidSource;
+            }
+
+            mermaid.initialize({
+              startOnLoad: false,
+              securityLevel: "strict",
+              theme: getTheme(),
+            });
+
+            mermaid.run({ querySelector: "pre.mermaid" });
+          };
+
+          renderMermaid();
+          document.addEventListener("fd:theme-change", renderMermaid);
+        })();
+      </script>
+    {{ end }}
   </body>
 </html>

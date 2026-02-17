@@ -1,8 +1,9 @@
 +++
 title = 'Ressources sur les SERM'
 category = 'Hormones et THS'
-external_url = 'https://partagenre.fransgenre.fr/ressources/formatrans-3'
+external_url = 'https://partagenre.fransgenre.fr/ressources/formatrans-3-ths-alternatifs-les-serm-prescription'
+icon = 'ressources-media/serm/icon.png'
 draft = false
 +++
 
-Ressources sur les SERM (Selective Estrogen Receptor Modulator) et le THS féminisant sans seins.
+Ressources sur les {{< terme "serm" "SERM" >}} ({{< terme "serm" "Selective Estrogen Receptor Modulator" >}}) et le {{< terme "ths" "THS" >}} féminisant sans seins.

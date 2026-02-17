@@ -1,6 +1,6 @@
 {{ define "main" }}
-  <section class="space-y-4">
-    <header class="space-y-4">
+  <section class="space-y-8">
+    <header class="space-y-8">
       <h2 class="text-3xl font-bold tracking-tight">{{ .Title }}</h2>
       {{ with .Content }}
         <div class="panel">
@@ -13,7 +13,7 @@
 
     {{ if eq .Section "blog" }}
       {{ $visibleBlog := where .Pages "Date.Unix" "le" (now).Unix }}
-      <div class="space-y-4">
+      <div class="space-y-6">
         {{ range $visibleBlog.ByDate.Reverse }}
           {{ $page := . }}
           {{ $imgURL := "" }}
@@ -92,7 +92,7 @@
         {{ $monthStarts = $monthStarts | append ($baseMonth.AddDate 0 $offset 0) }}
       {{ end }}
 
-      <section class="space-y-4" aria-labelledby="agenda-calendrier">
+      <section class="space-y-6" aria-labelledby="agenda-calendrier">
         <h3 id="agenda-calendrier" class="text-xl font-semibold">Calendrier (à venir)</h3>
         <div class="grid gap-4 lg:grid-cols-2">
           {{ range $monthStarts }}
@@ -134,7 +134,10 @@
                           {{ $eventStart := .Date }}
                           {{ with .Params.start }}{{ $eventStart = time.AsTime . }}{{ end }}
                           {{ if and (eq ($eventStart.Format "2006-01") $monthKey) (eq $eventStart.Day $day) }}
-                            <span class="inline-block h-1.5 w-1.5 rounded-full" style="background-color: {{ .Params.color | default "#18181b" }};"></span>
+                            {{ $dotColor := .Params.color | default "#18181b" }}
+                            <svg class="h-1.5 w-1.5" viewBox="0 0 6 6" aria-hidden="true" focusable="false">
+                              <circle cx="3" cy="3" r="3" fill="{{ $dotColor }}"></circle>
+                            </svg>
                           {{ end }}
                         {{ end }}
                       </div>
@@ -151,13 +154,14 @@
         </div>
       </section>
 
-      <section class="space-y-6" aria-labelledby="agenda-liste">
+      <section class="space-y-8" aria-labelledby="agenda-liste">
         <h3 id="agenda-liste" class="text-xl font-semibold">Liste des évènements</h3>
 
         <div class="space-y-4">
           <h4 class="text-base font-semibold">Évènements à venir</h4>
           {{ if gt (len $future) 0 }}
             {{ range sort $future "Date" "asc" }}
+              {{ $event := . }}
               {{ $start := .Date }}
               {{ with .Params.start }}{{ $start = time.AsTime . }}{{ end }}
               {{ $end := $start }}
@@ -167,7 +171,11 @@
                 {{ $hasEnd = true }}
               {{ end }}
 
-              <article id="agenda-event-{{ .File.TranslationBaseName }}" class="panel border-l-4 scroll-mt-24" style="border-left-color: {{ .Params.color | default "#18181b" }};">
+              {{ $eventColor := .Params.color | default "#18181b" }}
+              <article id="agenda-event-{{ .File.TranslationBaseName }}" class="panel relative overflow-hidden pl-6 scroll-mt-24">
+                <svg class="pointer-events-none absolute inset-y-0 left-0 h-full w-1" viewBox="0 0 4 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                  <rect x="0" y="0" width="4" height="100" fill="{{ $eventColor }}"></rect>
+                </svg>
                 <h4 class="text-lg font-semibold">{{ .Title }}</h4>
                 <p class="mt-1 text-sm text-zinc-600">{{ $start.Format "02/01/2006 15:04" }}{{ if $hasEnd }} - {{ $end.Format "02/01/2006 15:04" }}{{ end }}</p>
                 {{ with .Params.location }}<p class="mt-1 text-sm text-zinc-700">{{ . }}</p>{{ end }}
@@ -177,11 +185,18 @@
                     Lire plus...
                   </a>
                 </p>
-                {{ with .Params.tags }}
-                  <ul class="mt-3 flex flex-wrap gap-2">
-                    {{ range . }}<li class="rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-700">{{ . }}</li>{{ end }}
-                  </ul>
-                {{ end }}
+                <div class="mt-3 flex flex-wrap items-center gap-2">
+                  {{ with .Params.tags }}
+                    <ul class="flex flex-wrap gap-2">
+                      {{ range . }}<li class="rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-700">{{ . }}</li>{{ end }}
+                    </ul>
+                  {{ end }}
+                  {{ with .OutputFormats.Get "ICS" }}
+                    <a href="{{ .RelPermalink }}" download="{{ $event.File.TranslationBaseName }}.ics" class="btn btn-secondary ml-auto">
+                      Ajouter à l'agenda
+                    </a>
+                  {{ end }}
+                </div>
                 {{ with .Params.post_ref }}
                   {{ $postRef := . }}
                   {{ with site.GetPage $postRef }}
@@ -210,7 +225,11 @@
                 {{ $hasEnd = true }}
               {{ end }}
 
-              <article class="panel agenda-past border-l-4" style="border-left-color: {{ .Params.color | default "#71717a" }};">
+              {{ $eventColor := .Params.color | default "#71717a" }}
+              <article class="panel agenda-past relative overflow-hidden pl-6">
+                <svg class="pointer-events-none absolute inset-y-0 left-0 h-full w-1" viewBox="0 0 4 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                  <rect x="0" y="0" width="4" height="100" fill="{{ $eventColor }}"></rect>
+                </svg>
                 <div class="flex items-start justify-between gap-3">
                   <h4 class="text-lg font-semibold">{{ .Title }}</h4>
                   <span class="shrink-0 rounded-full bg-zinc-200 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-zinc-600">Passé</span>
@@ -223,11 +242,13 @@
                     Lire plus...
                   </a>
                 </p>
-                {{ with .Params.tags }}
-                  <ul class="mt-3 flex flex-wrap gap-2">
-                    {{ range . }}<li class="rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-700">{{ . }}</li>{{ end }}
-                  </ul>
-                {{ end }}
+                <div class="mt-3 flex flex-wrap items-center gap-2">
+                  {{ with .Params.tags }}
+                    <ul class="flex flex-wrap gap-2">
+                      {{ range . }}<li class="rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-700">{{ . }}</li>{{ end }}
+                    </ul>
+                  {{ end }}
+                </div>
                 {{ with .Params.post_ref }}
                   {{ $postRef := . }}
                   {{ with site.GetPage $postRef }}
@@ -245,29 +266,90 @@
       </section>
 
     {{ else if eq .Section "ressources" }}
-      <ul class="space-y-3">
+      <ul class="space-y-4">
         {{ range sort .Pages "Params.category" "asc" }}
           {{ $page := . }}
+          {{ $media := "" }}
+          {{ with $page.Params.image }}{{ $media = . }}{{ end }}
+          {{ if eq $media "" }}{{ with $page.Params.icon }}{{ $media = . }}{{ end }}{{ end }}
+          {{ if eq $media "" }}{{ with $page.Params.external_card }}{{ $media = . }}{{ end }}{{ end }}
+          {{ if eq $media "" }}{{ with $page.Params.external_icon }}{{ $media = . }}{{ end }}{{ end }}
+          {{ if eq $media "" }}{{ $media = "icons/resource-default.svg" }}{{ end }}
+          {{ $thumbLink := $page.RelPermalink }}
+          {{ $thumbExternal := false }}
+          {{ with $page.Params.external_url }}
+            {{ $thumbLink = . }}
+            {{ $thumbExternal = true }}
+          {{ else }}
+            {{ with $page.Params.external_url_2 }}
+              {{ $thumbLink = . }}
+              {{ $thumbExternal = true }}
+            {{ end }}
+          {{ end }}
+          <li class="panel">
+            <div class="flex items-start gap-3">
+              <div class="mt-0.5 shrink-0">
+                <a href="{{ $thumbLink }}" class="resource-thumb-link" {{ if $thumbExternal }}target="_blank" rel="noreferrer"{{ end }}>
+                  <img
+                    src="{{ if or (hasPrefix $media "http://") (hasPrefix $media "https://") }}{{ $media | safeURL }}{{ else }}{{ $media | relURL }}{{ end }}"
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    decoding="async"
+                    class="resource-thumb"
+                  >
+                </a>
+              </div>
+
+              <div class="min-w-0 flex-1">
+                <div class="flex items-start justify-between gap-3">
+                  <span class="font-semibold text-zinc-900">{{ $page.Title }}</span>
+                  <p class="shrink-0 text-xs uppercase tracking-wide text-zinc-500">{{ $page.Params.category }}</p>
+                </div>
+
+                {{ with $page.Params.external_url }}
+                  <p class="mt-1 flex items-center gap-1 text-xs text-zinc-500">
+                    <span class="shrink-0">Lien :</span>
+                    <a href="{{ . }}" target="_blank" rel="noreferrer" title="{{ . }}" class="min-w-0 flex-1 truncate text-zinc-600 underline underline-offset-2 hover:text-zinc-900">{{ . }}</a>
+                  </p>
+                {{ end }}
+                {{ with $page.Params.external_url_2 }}
+                  <p class="mt-1 flex items-center gap-1 text-xs text-zinc-500">
+                    <span class="shrink-0">Lien :</span>
+                    <a href="{{ . }}" target="_blank" rel="noreferrer" title="{{ . }}" class="min-w-0 flex-1 truncate text-zinc-600 underline underline-offset-2 hover:text-zinc-900">{{ . }}</a>
+                  </p>
+                {{ end }}
+
+                <div class="copy mt-1 text-sm leading-6 text-zinc-700">{{ $page.Content }}</div>
+              </div>
+            </div>
+          </li>
+        {{ end }}
+      </ul>
+
+    {{ else if eq .Section "glossaire" }}
+      <ul class="space-y-4">
+        {{ range .RegularPages.ByTitle }}
           <li class="panel">
             <div class="flex items-start justify-between gap-3">
-              {{ with $page.Params.external_url }}
-                <a href="{{ . }}" target="_blank" rel="noreferrer" class="font-semibold text-zinc-900 underline-offset-4 hover:underline">{{ $page.Title }}</a>
-              {{ else }}
-                <span class="font-semibold text-zinc-900">{{ $page.Title }}</span>
+              <h3 class="text-lg font-semibold">
+                <a href="{{ .RelPermalink }}" class="hover:underline">{{ .Title }}</a>
+              </h3>
+              {{ with .Params.category }}
+                <p class="shrink-0 text-xs uppercase tracking-wide text-zinc-500">{{ . }}</p>
               {{ end }}
-              <p class="shrink-0 text-xs uppercase tracking-wide text-zinc-500">{{ $page.Params.category }}</p>
             </div>
-            <div class="copy mt-1 text-sm leading-6 text-zinc-700">{{ $page.Summary }}</div>
-            {{ with $page.Params.external_url_2 }}
-              <p class="mt-2"><a href="{{ . }}" target="_blank" rel="noreferrer" class="text-sm text-zinc-700 underline">Lien supplémentaire</a></p>
+            {{ with .Params.synonyms }}
+              <p class="mt-1 text-xs text-zinc-500">Synonymes: {{ delimit . ", " }}</p>
             {{ end }}
+            <div class="copy mt-2 text-sm leading-6 text-zinc-700">{{ .Summary }}</div>
           </li>
         {{ end }}
       </ul>
 
     {{ else }}
       {{ if .Pages }}
-        <ul class="space-y-3">
+        <ul class="space-y-4">
           {{ range .Pages.ByWeight }}
             <li class="panel">
               <a href="{{ .RelPermalink }}" class="font-semibold hover:underline">{{ .Title }}</a>
@@ -279,3 +361,5 @@
     {{ end }}
   </section>
 {{ end }}
+
+
