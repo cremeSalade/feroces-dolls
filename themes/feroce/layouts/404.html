@@ -1,0 +1,19 @@
+{{ define "main" }}
+  <section class="space-y-8">
+    <header class="space-y-4">
+      <h2 class="text-3xl font-bold tracking-tight">404 - Page introuvable</h2>
+      <p class="text-zinc-700">L'URL demandee n'existe pas ou a ete deplacee.</p>
+    </header>
+
+    <div class="panel space-y-5">
+      <p class="text-sm leading-6 text-zinc-700">
+        Tu peux revenir a l'accueil, consulter l'agenda, ou parcourir les ressources.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a class="btn btn-primary" href="{{ site.Home.RelPermalink }}">Retour a l'accueil</a>
+        <a class="btn btn-secondary" href="{{ "agenda/" | relURL }}">Voir l'agenda</a>
+        <a class="btn btn-secondary" href="{{ "ressources/" | relURL }}">Voir les ressources</a>
+      </div>
+    </div>
+  </section>
+{{ end }}

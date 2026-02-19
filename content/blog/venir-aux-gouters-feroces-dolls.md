@@ -10,13 +10,15 @@ On nous pose souvent la question : **Est-ce que moi je peux venir aux goûters d
 
 Les goûters sont en **{{< terme "mixite-choisie" "mixité choisie" >}} {{< terme "transfem" "transfem+" >}}**, mais c'est pas toujours exactement clair non plus qui ça concerne exactement.
 
-Le plus efficace est d'utiliser ce schéma indicatif. Mais si tu as un doute, tu peux toujours nous écrire :)
+Tu peux donc peut-être utiliser ce schéma indicatif. Mais si tu as un doute, tu peux toujours nous écrire. En vrai, les parcours sont parfois très différents et y'a plein de trucs à prendre en compte, et les bails d'identitées bah en vrai on s'en carre un peu le cul quand même, donc viens discuter au pire.
+
+Peu importe que t’ai transitionnéx ou non, que tu sois encore en recherche ou questionnement, ou bien que t’ai fait ton coming out y'a 20 ans. C’est ouvert à toutes les personnes TransFem, inter ou dyadiques, en tous genres : Meufs Transgenres, Trans Grrrlz, Hétéras, Pédales Oestrogenées, Gouines Trans, MtFtM, Travelottes, Femmes Transsexuelles, Fâmmeuh Trans ou Un Femme Trans, Trans fameuses, femmes phénoménales, m2X, m2U, Diva du quartier ou du PMU, Trannies, Genderfluid, TDS transfem etc etc.
 
 ```mermaid
 flowchart TD
     A0(Est-ce que tu veux venir aux goûters des Féroces Dolls ?) -->|OUI !| A
     A(À quel genre as-tu été assigné·e à la naissance ?) -->|Tu as été assigné·e garçon| B(Est-ce que tu es un homme ?)
-    A -->|Tu as été assigné·e fille| C(Est-ce que tu as, ou as eu, un parcours de transition et/ou de détransition qui t'expose aujourd'hui à de la transmisogynie, tout en t'identifiant plutôt féminine ?)
+    A -->|Tu as été assigné·e fille| C(Est-ce que tu as, ou as eu, un parcours de transition et/ou de détransition qui t'expose aujourd'hui à de la transmisogynie, tout en t'identifiant plutôt au féminin ?)
     A -->|Ni l'un ni l'autre, notamment en étant inter et/ou venant d'une culture avec plus de 2 genres| D(Est-ce que tu subis de la transmisogynie ?)
     B -->|Non| E(Pas de souci, viens aux goûters, pense à lire et respecter la charte.)
     B -->|Oui| F(Est-ce que tu es en questionnement par rapport à ton genre, et/ou genderfluid, et/ou de genre non conforme ?)
@@ -45,5 +47,5 @@ flowchart TD
     style J fill:#F3ECF8,stroke:#6C2062,stroke-width:2px,color:#2F2230
 ```
 
-Merci de respecter la mixitée choisie, elle sert à protéger un espace de sociabilisation et de soutien pour des personnes exposées à des violences.
+Mais quand même merci de respecter la mixitée choisie, elle sert à protéger un espace de sociabilisation et de soutien pour des personnes exposées à des violences.
 

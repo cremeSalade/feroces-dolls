@@ -1,0 +1,32 @@
+{{- $raw := .Get "handle" | default (.Get 0) -}}
+{{- $label := .Get "label" | default (.Get 1) -}}
+{{- $class := .Get "class" | default "" -}}
+{{- $blank := .Get "blank" | default "true" -}}
+
+{{- if not $raw -}}
+  {{- errorf "Shortcode 'insta' sans handle dans %s" .Page.File.Path -}}
+{{- end -}}
+
+{{- $href := "" -}}
+{{- $name := "" -}}
+{{- $isURL := or (hasPrefix $raw "http://") (hasPrefix $raw "https://") -}}
+
+{{- if $isURL -}}
+  {{- $href = $raw | safeURL -}}
+  {{- $name = replaceRE "^https?://(www\\.)?instagram\\.com/" "" $raw -}}
+  {{- $name = replaceRE "[/?#].*$" "" $name -}}
+{{- else -}}
+  {{- $name = replaceRE "^@" "" $raw -}}
+  {{- $name = strings.TrimSuffix "/" $name -}}
+  {{- $href = printf "https://www.instagram.com/%s/" $name -}}
+{{- end -}}
+
+{{- if not $label -}}
+  {{- if ne $name "" -}}
+    {{- $label = printf "@%s" $name -}}
+  {{- else -}}
+    {{- $label = $raw -}}
+  {{- end -}}
+{{- end -}}
+
+<a href="{{ $href }}"{{ if ne $class "" }} class="{{ $class }}"{{ end }}{{ if eq $blank "true" }} target="_blank" rel="noreferrer"{{ end }}>{{ $label }}</a>

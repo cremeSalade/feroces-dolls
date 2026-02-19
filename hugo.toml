@@ -18,6 +18,17 @@ buildFuture = true
   instagram = 'https://www.instagram.com/ferocesdolls/'
   mastodon = 'https://piaille.fr/@ferocesdolls'
 
+[params.sections]
+  home = true
+  charte = true
+  activites = true
+  blog = true
+  agenda = true
+  dons = true
+  ressources = true
+  glossaire = true
+  contact = true
+
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
@@ -36,6 +47,11 @@ buildFuture = true
   name = 'Accueil'
   pageRef = '/'
   weight = 10
+
+[[menus.main]]
+  name = 'Charte'
+  pageRef = '/charte'
+  weight = 15
 
 [[menus.main]]
   name = 'Blog'

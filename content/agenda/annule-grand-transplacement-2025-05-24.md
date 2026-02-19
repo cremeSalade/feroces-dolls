@@ -29,9 +29,9 @@ Tatouage, prints, sérigraphies & autre à vendre, punk rap transfem et grosses 
 <<✧ Programme ✧>>
 ¤ 16h00 - Ouverture du BIB | Marché de créateurixes & tatoueureuses
 ¤ 19h40 - Tombola
-¤ 20h00 - @atyma1312 | Rap Emo Queer
-¤ 21h15 - @amanda_yvng | Trap Métal
-¤ 22h30 - @wasted180_music | Punk rap
+¤ 20h00 - {{< insta "@atyma1312" >}} | Rap Emo Queer
+¤ 21h15 - {{< insta "@amanda_yvng" >}} | Trap Métal
+¤ 22h30 - {{< insta "@wasted180_music" >}} | Punk rap
 ¤ 00h00 - ⚡︎ DJ sets ⚡︎
 ¤ ??h?? - Fin
 

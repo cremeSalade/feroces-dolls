@@ -1,29 +1,29 @@
 {{ define "main" }}
+  {{/* Section-level guard: keep route alive but show a disabled message. */}}
+  {{ $sectionKey := partial "page-section-key.html" (dict "page" .) }}
+  {{ $sectionEnabled := partial "section-enabled.html" (dict "site" site "key" $sectionKey) }}
+
+  {{ if and (ne $sectionKey "") (not $sectionEnabled) }}
+    {{ partial "section-disabled.html" (dict "layout" "single" "title" .Title) }}
+  {{ else }}
   {{ $imgURL := "" }}
   {{ $imgWidth := 0 }}
   {{ $imgHeight := 0 }}
+  {{ $fillSpec := "" }}
+  {{ if eq .Section "blog" }}
+    {{ $fillSpec = "1440x810 webp q80" }}
+  {{ end }}
   {{ with .Params.image }}
-    {{ $imgPath := . }}
-    {{ if or (hasPrefix $imgPath "http://") (hasPrefix $imgPath "https://") }}
-      {{ $imgURL = $imgPath }}
-    {{ else }}
-      {{ with ($.Site.GetPage (printf "/%s" $.Section)) }}
-        {{ with .Resources.GetMatch $imgPath }}
-          {{ if eq $.Section "blog" }}
-            {{ $hero := .Fill "1440x810 webp q80" }}
-            {{ $imgURL = $hero.RelPermalink }}
-            {{ $imgWidth = $hero.Width }}
-            {{ $imgHeight = $hero.Height }}
-          {{ else }}
-            {{ $imgURL = .RelPermalink }}
-          {{ end }}
-        {{ else }}
-          {{ $imgURL = ($imgPath | relURL) }}
-        {{ end }}
-      {{ else }}
-        {{ $imgURL = ($imgPath | relURL) }}
-      {{ end }}
-    {{ end }}
+    {{ $imgData := partial "resolved-image.html" (dict
+      "site" $.Site
+      "path" .
+      "resource_section" (printf "/%s" $.Section)
+      "fill" $fillSpec
+      "allow_external" true
+    ) | transform.Unmarshal }}
+    {{ $imgURL = index $imgData "url" }}
+    {{ $imgWidth = index $imgData "width" }}
+    {{ $imgHeight = index $imgData "height" }}
   {{ end }}
 
   {{ if and (eq .Section "blog") (gt .Date.Unix (now).Unix) }}
@@ -116,5 +116,6 @@
         </div>
       </div>
     </article>
+  {{ end }}
   {{ end }}
 {{ end }}

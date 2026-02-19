@@ -11,4 +11,6 @@ Il est possible cependant de donner directement à des cagnottes locales en lign
 - Pour la devanture du Madré, bar lesbien/queer à montpellier : https://tribee.fr/participations/appel-solidaire-devanture-madre
 
 Sinon moins local mais important :
-- Donner pour le projet d'AcceptessT, la « Maison des Orchidées », un centre d'hébergement dédié aux personnes trans âgées : https://www.helloasso.com/associations/acceptess-t/collectes/pour-nos-aine-e-s-trans-maison-des-orchidees
+- Donner pour le projet d'AcceptessT, la « Maison des Orchidées », un centre d'hébergement dédié aux personnes trans âgées : https://www.helloasso.com/associations/acceptess-t/collectes/pour-nos-aine-e-s-trans-maison-des-orchidees
+
+> Si t'es du coin (ou pas !) et que t'as une cagnotte que tu veux partager envoie nous un message !

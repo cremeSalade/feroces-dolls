@@ -1,0 +1,15 @@
+{{- $site := .site | default site -}}
+{{- $key := .key | default "" -}}
+{{- $enabled := true -}}
+
+{{- if ne $key "" -}}
+  {{/* If a section flag exists in params.sections, it overrides the default (true). */}}
+  {{- with $site.Params.sections -}}
+    {{- $value := index . $key -}}
+    {{- if ne $value nil -}}
+      {{- $enabled = $value -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $enabled -}}

@@ -61,6 +61,18 @@ Lister les contenus dates dans le futur:
 hugo list future
 ```
 
+Lister les brouillons:
+
+```bash
+hugo list drafts
+```
+
+Builder en incluant les brouillons (test local):
+
+```bash
+hugo --gc --minify --buildDrafts
+```
+
 ## Structure du projet
 
 - `content/`: contenu editorial (blog, agenda, ressources, glossaire, etc.)
@@ -83,6 +95,139 @@ Points importants:
   - email
   - Instagram
   - Mastodon
+
+### Sections activables (robuste)
+
+Le projet permet d'activer/desactiver les sections sans supprimer leur contenu.
+
+Configuration dans `hugo.toml`:
+
+```toml
+[params.sections]
+  home = true
+  activites = true
+  blog = true
+  agenda = true
+  dons = true
+  ressources = true
+  glossaire = true
+  contact = true
+```
+
+Effets:
+
+- la navbar masque automatiquement les sections a `false`
+- la home masque le bloc activites si `activites = false`
+- les pages liste/single de section desactivee affichent un message "section desactivee"
+- le contenu reste dans le repo et peut etre reactive plus tard en remettant `true`
+
+## Ajouter une section
+
+Le plus important: il y a 2 types de sections dans ce projet.
+
+1. Section "dossier" (ex: `blog`, `agenda`, `ressources`, `glossaire`, `activites`)
+2. Section "page simple" (ex: `dons`, `contact`, `charte`)
+
+### 1) Ajouter une section dossier
+
+Exemple: `charte-technique` comme nouvelle section liste + pages.
+
+1. Creer le dossier de contenu:
+```bash
+mkdir content/charte-technique
+```
+2. Creer la page index de section:
+```bash
+hugo new charte-technique/_index.md
+```
+3. (Optionnel) Creer un archetype dedie:
+- `archetypes/charte-technique.md`
+4. Ajouter la section aux toggles:
+- `hugo.toml` > `[params.sections]`:
+```toml
+charte-technique = true
+```
+5. Ajouter la section au menu:
+- `hugo.toml` > `[[menus.main]]`:
+```toml
+[[menus.main]]
+  name = 'Charte technique'
+  pageRef = '/charte-technique'
+  weight = 25
+```
+6. Creer du contenu dedans:
+```bash
+hugo new charte-technique/premiere-page.md
+```
+
+### 2) Ajouter une section page simple
+
+Exemple: `mentions-legales` en page unique.
+
+1. Creer la page:
+```bash
+hugo new mentions-legales.md
+```
+2. Ajouter la section aux toggles:
+- `hugo.toml` > `[params.sections]`:
+```toml
+mentions-legales = true
+```
+3. Ajouter au menu:
+```toml
+[[menus.main]]
+  name = 'Mentions legales'
+  pageRef = '/mentions-legales'
+  weight = 70
+```
+4. Ajouter le slug a la normalisation des pages simples:
+- fichier `themes/feroce/layouts/partials/page-section-key.html`
+- dans le bloc `if or (...)`, ajouter:
+```go-html-template
+(eq $base "mentions-legales")
+```
+
+Sans cette etape, la section s'affiche bien, mais le toggle `params.sections.mentions-legales` ne sera pas applique comme prevu sur cette page simple.
+
+### 3) (Optionnel) Rendu specifique de la section
+
+Par defaut, la section passera par les templates generiques:
+- `themes/feroce/layouts/_default/list.html`
+- `themes/feroce/layouts/_default/single.html`
+
+Si tu veux un rendu custom:
+- soit ajouter des conditions `if eq .Section "ma-section"` dans ces templates
+- soit creer des templates dedies:
+  - `themes/feroce/layouts/ma-section/list.html`
+  - `themes/feroce/layouts/ma-section/single.html`
+
+### 4) Verification
+
+Tester localement:
+```bash
+hugo --gc --minify
+```
+
+Verifier:
+- la section apparait dans la navbar
+- la page/liste s'affiche
+- le toggle `[params.sections]` masque bien la section quand passe a `false`
+
+## Drafts et dates
+
+### Drafts
+
+- `draft = true`: la page n'est pas publiee par defaut.
+- `draft = false`: la page est publiable.
+- En local, `npm run dev` utilise `hugo server -D`, donc les drafts sont visibles.
+- En CI/deploy, les builds utilisent `hugo --gc --minify` (sans `-D`), donc les drafts ne sont pas publies.
+
+### Dates futures
+
+- Le projet a `buildFuture = true` dans `hugo.toml`, donc les contenus dates dans le futur sont buildes.
+- Regle metier du site:
+  - agenda futur: oui
+  - blog futur: non (masque dans les listes publiques du blog)
 
 ## Sections de contenu
 
@@ -211,6 +356,119 @@ Les gouters sont en {{< terme "mixite-choisie" "mixite choisie" >}}.
 Fichier du shortcode:
 
 - `themes/feroce/layouts/shortcodes/terme.html`
+
+## Shortcode download
+
+Shortcode pour ajouter un lien/bouton de telechargement (PDF, doc, etc.) dans un contenu Markdown.
+
+Exemple local (fichier dans `static/`):
+
+```md
+{{< download path="documents/charte.pdf" label="Telecharger la charte (PDF)" >}}
+```
+
+Exemple externe:
+
+```md
+{{< download path="https://exemple.org/fichier.pdf" label="Telecharger le PDF externe" >}}
+```
+
+Exemple avec nom de fichier force:
+
+```md
+{{< download path="documents/charte.pdf" label="Telecharger" filename="charte-feroces-dolls.pdf" >}}
+```
+
+Parametres:
+
+- `path` (obligatoire): chemin local (depuis `static/`) ou URL complete
+- `label` (optionnel): texte du lien
+- `filename` (optionnel): nom suggere au telechargement
+- `class` (optionnel): classes CSS (defaut: `btn btn-secondary`)
+- `download` (optionnel): `true`/`false` (defaut: `true`)
+
+Fichier du shortcode:
+
+- `themes/feroce/layouts/shortcodes/download.html`
+
+## Shortcode insta
+
+Shortcode pour transformer rapidement un handle Instagram en lien.
+
+Exemples:
+
+```md
+{{< insta "@ferocesdolls" >}}
+{{< insta "ferocesdolls" >}}
+{{< insta "@ferocesdolls" "Instagram des Féroces Dolls" >}}
+{{< insta handle="@ferocesdolls" label="@ferocesdolls" >}}
+```
+
+Parametres:
+
+- `handle` (ou argument 1, obligatoire): `@compte`, `compte`, ou URL Instagram complete
+- `label` (ou argument 2, optionnel): texte affiche
+- `class` (optionnel): classes CSS
+- `blank` (optionnel): `true`/`false` pour ouvrir dans un nouvel onglet (defaut: `true`)
+
+Fichier du shortcode:
+
+- `themes/feroce/layouts/shortcodes/insta.html`
+
+## Shortcode mastodon
+
+Shortcode pour transformer rapidement un handle Mastodon en lien.
+
+Exemples:
+
+```md
+{{< mastodon "@ferocesdolls@piaille.fr" >}}
+{{< mastodon "ferocesdolls@piaille.fr" >}}
+{{< mastodon "@ferocesdolls@piaille.fr" "Mastodon des Féroces Dolls" >}}
+{{< mastodon "https://piaille.fr/@ferocesdolls" >}}
+```
+
+Parametres:
+
+- `handle` (ou argument 1, obligatoire): `@user@instance`, `user@instance`, ou URL Mastodon complete
+- `label` (ou argument 2, optionnel): texte affiche
+- `class` (optionnel): classes CSS
+- `blank` (optionnel): `true`/`false` pour ouvrir dans un nouvel onglet (defaut: `true`)
+
+Fichier du shortcode:
+
+- `themes/feroce/layouts/shortcodes/mastodon.html`
+
+## Shortcode mail
+
+Shortcode pour generer un lien email `mailto:` avec obfuscation progressive.
+
+Exemples:
+
+```md
+{{< mail "reseautransfem-contact@lebib.org" >}}
+{{< mail "reseautransfem-contact@lebib.org" "Nous écrire" >}}
+{{< mail address="reseautransfem-contact@lebib.org" label="Contact" subject="Demande d'info" >}}
+```
+
+Parametres:
+
+- `address` (ou argument 1, obligatoire): adresse email
+- `label` (ou argument 2, optionnel): texte affiche
+- `subject` (optionnel): sujet du mail pre-rempli
+- `class` (optionnel): classes CSS
+- `obfuscate` (optionnel): `true`/`false` (defaut: `true`)
+
+Notes:
+
+- Avec `obfuscate=true`:
+  - sans JavaScript: le texte affiche `name [at] domain [dot] tld` (lisible humainement)
+  - avec JavaScript: le texte est remplace par un vrai lien `mailto:`
+- Ce n'est pas une protection absolue, mais c'est plus robuste qu'un email en clair.
+
+Fichier du shortcode:
+
+- `themes/feroce/layouts/shortcodes/mail.html`
 
 ## Mermaid (diagrammes dans les articles)
 

@@ -1,0 +1,16 @@
+{{- $page := .page -}}
+{{- $key := "" -}}
+
+{{/* Normalize a page to a "section key" used by params.sections toggles. */}}
+{{- if $page.IsHome -}}
+  {{- $key = "home" -}}
+{{- else if ne $page.Section "" -}}
+  {{- $key = $page.Section -}}
+{{- else if $page.File -}}
+  {{- $base := $page.File.BaseFileName -}}
+  {{- if or (eq $base "dons") (eq $base "contact") (eq $base "charte") -}}
+    {{- $key = $base -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $key -}}

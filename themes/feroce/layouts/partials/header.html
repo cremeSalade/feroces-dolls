@@ -12,30 +12,45 @@
       {{ with site.Menus.main }}
         <nav class="site-nav" aria-label="Navigation principale">
           {{ range . }}
-            {{ $isActive := $.IsMenuCurrent "main" . }}
-            {{ if not $isActive }}{{ $isActive = $.HasMenuCurrent "main" . }}{{ end }}
-            {{ if not $isActive }}
-              {{ $menuPath := strings.TrimSuffix "/" .URL }}
-              {{ $currentPath := strings.TrimSuffix "/" $.RelPermalink }}
-              {{ if eq $menuPath "" }}{{ $menuPath = "/" }}{{ end }}
-              {{ if eq $currentPath "" }}{{ $currentPath = "/" }}{{ end }}
-              {{ if eq $menuPath "/" }}
-                {{ $isActive = eq $currentPath "/" }}
+            {{/* Derive the section key from menu page first, then fallback to URL path. */}}
+            {{ $sectionKey := "" }}
+            {{ with .Page }}
+              {{ $sectionKey = partial "page-section-key.html" (dict "page" .) }}
+            {{ end }}
+            {{ if eq $sectionKey "" }}
+              {{ $menuPath := strings.Trim .URL "/" }}
+              {{ if eq $menuPath "" }}
+                {{ $sectionKey = "home" }}
               {{ else }}
-                {{ $isActive = or (eq $currentPath $menuPath) (hasPrefix $currentPath (printf "%s/" $menuPath)) }}
+                {{ $sectionKey = index (split $menuPath "/") 0 }}
               {{ end }}
             {{ end }}
-            <a href="{{ .URL }}" class="link-main {{ if $isActive }}link-main-active{{ end }}">{{ .Name }}</a>
+
+            {{/* Hide menu entries when the related section is disabled in config. */}}
+            {{ $sectionEnabled := partial "section-enabled.html" (dict "site" site "key" $sectionKey) }}
+            {{ if $sectionEnabled }}
+              {{/* Keep existing "active link" logic for menu highlighting. */}}
+              {{ $isActive := $.IsMenuCurrent "main" . }}
+              {{ if not $isActive }}{{ $isActive = $.HasMenuCurrent "main" . }}{{ end }}
+              {{ if not $isActive }}
+                {{ $menuPath := strings.TrimSuffix "/" .URL }}
+                {{ $currentPath := strings.TrimSuffix "/" $.RelPermalink }}
+                {{ if eq $menuPath "" }}{{ $menuPath = "/" }}{{ end }}
+                {{ if eq $currentPath "" }}{{ $currentPath = "/" }}{{ end }}
+                {{ if eq $menuPath "/" }}
+                  {{ $isActive = eq $currentPath "/" }}
+                {{ else }}
+                  {{ $isActive = or (eq $currentPath $menuPath) (hasPrefix $currentPath (printf "%s/" $menuPath)) }}
+                {{ end }}
+              {{ end }}
+              <a href="{{ .URL }}" class="link-main {{ if $isActive }}link-main-active{{ end }}">{{ .Name }}</a>
+            {{ end }}
           {{ end }}
 
-          <button id="theme-toggle" type="button" class="theme-toggle theme-toggle-nav" data-theme="light" aria-pressed="false" aria-label="Activer le mode sombre" title="Activer le mode sombre">
-            <span class="theme-toggle-icon" aria-hidden="true"></span>
-          </button>
+          {{ partial "theme-toggle-button.html" . }}
         </nav>
       {{ else }}
-        <button id="theme-toggle" type="button" class="theme-toggle theme-toggle-nav" data-theme="light" aria-pressed="false" aria-label="Activer le mode sombre" title="Activer le mode sombre">
-          <span class="theme-toggle-icon" aria-hidden="true"></span>
-        </button>
+        {{ partial "theme-toggle-button.html" . }}
       {{ end }}
     </div>
   </div>

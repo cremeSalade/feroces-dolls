@@ -1,0 +1,53 @@
+{{- $raw := .Get "handle" | default (.Get 0) -}}
+{{- $label := .Get "label" | default (.Get 1) -}}
+{{- $class := .Get "class" | default "" -}}
+{{- $blank := .Get "blank" | default "true" -}}
+
+{{- if not $raw -}}
+  {{- errorf "Shortcode 'mastodon' sans handle dans %s" .Page.File.Path -}}
+{{- end -}}
+
+{{- $value := strings.TrimSuffix "/" $raw -}}
+{{- $isURL := or (hasPrefix $value "http://") (hasPrefix $value "https://") -}}
+{{- $username := "" -}}
+{{- $instance := "" -}}
+{{- $href := "" -}}
+
+{{- if $isURL -}}
+  {{- $href = $value | safeURL -}}
+  {{- $instance = replaceRE "^https?://([^/]+)/?.*$" "$1" $value -}}
+  {{- $username = replaceRE "^https?://[^/]+/@([^/?#]+).*$" "$1" $value -}}
+  {{- if eq $username $value -}}
+    {{- $username = replaceRE "^https?://[^/]+/users/([^/?#]+).*$" "$1" $value -}}
+    {{- if eq $username $value -}}
+      {{- $username = "" -}}
+    {{- end -}}
+  {{- end -}}
+{{- else -}}
+  {{- $clean := replaceRE "^@" "" $value -}}
+  {{- $username = replaceRE "^([^@]+)@([^@]+)$" "$1" $clean -}}
+  {{- $instance = replaceRE "^([^@]+)@([^@]+)$" "$2" $clean -}}
+
+  {{- if or (eq $username $clean) (eq $instance $clean) -}}
+    {{- with site.Params.social.mastodon -}}
+      {{- $instance = replaceRE "^https?://([^/]+)/?.*$" "$1" . -}}
+      {{- $username = $clean -}}
+    {{- else -}}
+      {{- errorf "Shortcode 'mastodon': handle attendu au format @user@instance (ou URL) dans %s" $.Page.File.Path -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $href = printf "https://%s/@%s" $instance $username -}}
+{{- end -}}
+
+{{- if not $label -}}
+  {{- if and (ne $username "") (ne $instance "") -}}
+    {{- $label = printf "@%s@%s" $username $instance -}}
+  {{- else if ne $username "" -}}
+    {{- $label = printf "@%s" $username -}}
+  {{- else -}}
+    {{- $label = $raw -}}
+  {{- end -}}
+{{- end -}}
+
+<a href="{{ $href }}"{{ if ne $class "" }} class="{{ $class }}"{{ end }}{{ if eq $blank "true" }} target="_blank" rel="noreferrer"{{ end }}>{{ $label }}</a>

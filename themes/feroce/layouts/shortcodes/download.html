@@ -1,0 +1,29 @@
+{{- $path := .Get "path" | default (.Get 0) -}}
+{{- $label := .Get "label" | default (.Get 1) | default "Telecharger le document" -}}
+{{- $filename := .Get "filename" | default "" -}}
+{{- $classArg := .Get "class" | default "" -}}
+{{- $class := "btn btn-secondary btn-download" -}}
+{{- $download := .Get "download" | default "true" -}}
+
+{{- if not $path -}}
+  {{- errorf "Shortcode 'download' sans path dans %s" .Page.File.Path -}}
+{{- end -}}
+
+{{- if ne $classArg "" -}}
+  {{- $class = printf "%s btn-download" $classArg -}}
+{{- end -}}
+
+{{- $isExternal := or (hasPrefix $path "http://") (hasPrefix $path "https://") -}}
+{{- $href := $path | relURL -}}
+{{- if $isExternal -}}
+  {{- $href = $path | safeURL -}}
+{{- end -}}
+
+<a href="{{ $href }}" class="{{ $class }}"{{ if eq $download "true" }}{{ if ne $filename "" }} download="{{ $filename }}"{{ else }} download{{ end }}{{ end }}{{ if $isExternal }} target="_blank" rel="noreferrer"{{ end }}>
+  <span class="btn-download-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+      <path d="M12 3v11m0 0 4-4m-4 4-4-4M5 17h14v4H5z"></path>
+    </svg>
+  </span>
+  <span class="btn-download-label">{{- $label -}}</span>
+</a>

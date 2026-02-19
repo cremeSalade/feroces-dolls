@@ -1,0 +1,20 @@
+{{- $layout := .layout | default "list" -}}
+{{- $title := .title | default "" -}}
+
+{{- if eq $layout "single" -}}
+  <article class="panel space-y-4">
+    {{- if ne $title "" -}}
+      <h2 class="text-3xl font-bold tracking-tight">{{ $title }}</h2>
+    {{- end -}}
+    <p class="text-zinc-700">Cette section est temporairement desactivee.</p>
+  </article>
+{{- else -}}
+  <section class="space-y-8">
+    {{- if ne $title "" -}}
+      <h2 class="text-3xl font-bold tracking-tight">{{ $title }}</h2>
+    {{- end -}}
+    <div class="panel">
+      <p class="text-sm leading-6 text-zinc-700">Cette section est temporairement desactivee.</p>
+    </div>
+  </section>
+{{- end -}}

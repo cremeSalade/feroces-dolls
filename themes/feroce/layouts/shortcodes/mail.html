@@ -1,0 +1,19 @@
+{{- $address := .Get "address" | default (.Get 0) -}}
+{{- $label := .Get "label" | default (.Get 1) -}}
+{{- $class := .Get "class" | default "" -}}
+{{- $obfuscate := .Get "obfuscate" | default "true" -}}
+{{- $subject := .Get "subject" | default "" -}}
+
+{{- if not $address -}}
+  {{- errorf "Shortcode 'mail' sans address dans %s" .Page.File.Path -}}
+{{- end -}}
+
+{{- $idSeed := printf "%s|%s|%d" .Page.File.Path $address .Ordinal -}}
+{{- partial "mail-link.html" (dict
+  "address" $address
+  "label" $label
+  "class" $class
+  "obfuscate" $obfuscate
+  "subject" $subject
+  "id_seed" $idSeed
+) -}}

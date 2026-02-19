@@ -29,6 +29,7 @@
           button.setAttribute("title", labels[theme] || labels.light);
           button.setAttribute("data-theme", theme);
           if (metaTheme) metaTheme.setAttribute("content", colors[theme] || colors.light);
+          // Notify optional integrations (ex: Mermaid) so they can sync theme without reload.
           document.dispatchEvent(new CustomEvent("fd:theme-change", { detail: { theme } }));
         };
 
@@ -56,6 +57,7 @@
             const nodes = Array.from(document.querySelectorAll("pre.mermaid"));
             if (!nodes.length) return;
 
+            // Restore original source before each render, otherwise Mermaid keeps transformed SVG.
             for (const node of nodes) {
               if (!node.dataset.mermaidSource) {
                 node.dataset.mermaidSource = node.textContent || "";

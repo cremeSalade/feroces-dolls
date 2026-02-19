@@ -1,0 +1,35 @@
+{{- $imgPath := .path | default "" | strings.TrimSpace -}}
+{{- $site := .site | default site -}}
+{{- $allowExternal := .allow_external | default false -}}
+{{- $resourceSection := .resource_section | default "" -}}
+{{- $fill := .fill | default "" -}}
+
+{{- $url := "" -}}
+{{- $width := 0 -}}
+{{- $height := 0 -}}
+
+{{- if ne $imgPath "" -}}
+  {{- if and $allowExternal (or (hasPrefix $imgPath "http://") (hasPrefix $imgPath "https://")) -}}
+    {{- $url = $imgPath | safeURL -}}
+  {{- else -}}
+    {{- $url = $imgPath | relURL -}}
+    {{- if ne $resourceSection "" -}}
+      {{- with ($site.GetPage $resourceSection) -}}
+        {{- with .Resources.GetMatch $imgPath -}}
+          {{- if ne $fill "" -}}
+            {{- $processed := .Fill $fill -}}
+            {{- $url = $processed.RelPermalink -}}
+            {{- $width = $processed.Width -}}
+            {{- $height = $processed.Height -}}
+          {{- else -}}
+            {{- $url = .RelPermalink -}}
+            {{- $width = .Width -}}
+            {{- $height = .Height -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- dict "url" $url "width" $width "height" $height | jsonify -}}

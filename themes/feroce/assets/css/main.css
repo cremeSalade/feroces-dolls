@@ -192,6 +192,21 @@
     color: var(--fd-muted-title);
   }
 
+  .agenda-day-today {
+    border-color: var(--fd-accent) !important;
+    box-shadow: inset 0 0 0 1px var(--fd-accent);
+    background: rgba(108, 32, 98, 0.07);
+  }
+
+  .agenda-day-today .agenda-day-number {
+    color: var(--fd-accent);
+    font-weight: 700;
+  }
+
+  [data-theme="dark"] .agenda-day-today {
+    background: rgba(204, 132, 188, 0.14);
+  }
+
   .theme-toggle {
     @apply inline-flex h-8 w-10 items-center justify-center rounded-full p-0;
     color: var(--fd-ink-soft);
@@ -212,6 +227,7 @@
     border-radius: 9999px;
     border: 1px solid var(--fd-line);
     background: var(--fd-surface-muted);
+    transform: translateY(0.02rem);
   }
 
   .theme-toggle-icon::before {
@@ -276,8 +292,60 @@
   }
 
   .btn-secondary:hover {
-    background: var(--fd-surface-muted);
+    background: rgba(108, 32, 98, 0.08);
+    border-color: rgba(108, 32, 98, 0.24);
     color: var(--fd-ink);
+  }
+
+  [data-theme="dark"] .btn-secondary:hover {
+    background: rgba(204, 132, 188, 0.14);
+    border-color: rgba(204, 132, 188, 0.38);
+    color: var(--fd-ink);
+  }
+
+  .btn-download {
+    gap: 0.4rem;
+    margin-top: 0.15rem;
+    margin-bottom: 0.15rem;
+    padding-left: 0.7rem;
+    padding-right: 0.85rem;
+  }
+
+  .btn-download-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 9999px;
+    background: rgba(108, 32, 98, 0.1);
+    flex-shrink: 0;
+  }
+
+  .btn-download-icon svg {
+    width: 0.82rem;
+    height: 0.82rem;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
+
+  .btn-download-label {
+    line-height: 1.15;
+  }
+
+  .btn-download:hover .btn-download-icon {
+    background: rgba(108, 32, 98, 0.16);
+  }
+
+  [data-theme="dark"] .btn-download-icon {
+    background: rgba(204, 132, 188, 0.16);
+  }
+
+  [data-theme="dark"] .btn-download:hover .btn-download-icon {
+    background: rgba(204, 132, 188, 0.24);
   }
 
   .resource-thumb {
@@ -309,6 +377,18 @@
     background: var(--fd-surface-muted);
     font-size: 0.9rem;
     line-height: 1;
+  }
+
+  .mail-obf-css {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  .summary-fade {
+    -webkit-mask-image: linear-gradient(to bottom, #000 74%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 74%, transparent 100%);
   }
 
   .copy > p + p {
@@ -508,6 +588,11 @@
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 0.2rem;
+  }
+
+  .copy a.btn,
+  .copy a.btn:hover {
+    text-decoration: none;
   }
 
   .copy a.terme-link {

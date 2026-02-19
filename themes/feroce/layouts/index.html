@@ -8,6 +8,8 @@
       </div>
     </div>
 
+    {{/* Homepage can hide the activities block via params.sections.activites. */}}
+    {{ if partial "section-enabled.html" (dict "site" site "key" "activites") }}
     <section aria-labelledby="activites" class="space-y-6">
       <h2 id="activites" class="text-2xl font-bold">Nos activités</h2>
       <div class="columns-1 gap-4 sm:columns-2 xl:columns-2">
@@ -16,19 +18,15 @@
           {{ $imgWidth := 0 }}
           {{ $imgHeight := 0 }}
           {{ with .Params.image }}
-            {{ $imgPath := . }}
-            {{ with ($.Site.GetPage "/activites") }}
-              {{ with .Resources.GetMatch $imgPath }}
-                {{ $thumb := .Fill "960x540 webp q75" }}
-                {{ $imgURL = $thumb.RelPermalink }}
-                {{ $imgWidth = $thumb.Width }}
-                {{ $imgHeight = $thumb.Height }}
-              {{ else }}
-                {{ $imgURL = ($imgPath | relURL) }}
-              {{ end }}
-            {{ else }}
-              {{ $imgURL = ($imgPath | relURL) }}
-            {{ end }}
+            {{ $imgData := partial "resolved-image.html" (dict
+              "site" $.Site
+              "path" .
+              "resource_section" "/activites"
+              "fill" "960x540 webp q75"
+            ) | transform.Unmarshal }}
+            {{ $imgURL = index $imgData "url" }}
+            {{ $imgWidth = index $imgData "width" }}
+            {{ $imgHeight = index $imgData "height" }}
           {{ end }}
 
           <article class="panel mb-4 break-inside-avoid overflow-hidden p-0">
@@ -54,5 +52,6 @@
         {{ end }}
       </div>
     </section>
+    {{ end }}
   </section>
 {{ end }}

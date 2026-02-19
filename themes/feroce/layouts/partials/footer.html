@@ -3,7 +3,15 @@
     <p class="font-medium text-zinc-700">{{ site.Title }}</p>
     <ul class="flex flex-wrap items-center gap-4">
       {{ with site.Params.social.email }}
-        <li><a href="mailto:{{ . }}" class="underline underline-offset-4 hover:text-zinc-900">{{ . }}</a></li>
+        <li>
+          {{ partial "mail-link.html" (dict
+            "address" .
+            "label" .
+            "class" "underline underline-offset-4 hover:text-zinc-900"
+            "obfuscate" true
+            "id_seed" (printf "footer|%s|%s" $.RelPermalink .)
+          ) }}
+        </li>
       {{ end }}
       {{ with site.Params.social.instagram }}
         <li><a href="{{ . }}" target="_blank" rel="noreferrer" class="underline underline-offset-4 hover:text-zinc-900">Instagram</a></li>

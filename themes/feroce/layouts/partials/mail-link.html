@@ -1,0 +1,74 @@
+{{- $address := .address | default "" | strings.TrimSpace -}}
+{{- $label := .label | default $address -}}
+{{- $class := .class | default "" -}}
+{{- $subject := .subject | default "" -}}
+{{- $idSeed := .id_seed | default (printf "%s|%s" $address $label) -}}
+
+{{- $obfuscate := true -}}
+{{- with .obfuscate -}}
+  {{- $obfuscate = ne (lower (printf "%v" .)) "false" -}}
+{{- end -}}
+
+{{- if eq $address "" -}}
+  {{- errorf "Partial 'mail-link': adresse vide." -}}
+{{- end -}}
+
+{{- $parts := split $address "@" -}}
+{{- if lt (len $parts) 2 -}}
+  {{- errorf "Partial 'mail-link': adresse invalide '%s'." $address -}}
+{{- end -}}
+
+{{- $local := replace (index $parts 0) "\"" "" -}}
+{{- $domainFull := replace (delimit (after 1 $parts) "@") "\"" "" -}}
+{{- $domainParts := split $domainFull "." -}}
+{{- $domain := $domainFull -}}
+{{- $tld := "" -}}
+{{- if gt (len $domainParts) 1 -}}
+  {{- $tld = replace (index $domainParts (sub (len $domainParts) 1)) "\"" "" -}}
+  {{- $domain = replace (delimit (first (sub (len $domainParts) 1) $domainParts) ".") "\"" "" -}}
+{{- end -}}
+
+{{- $linkText := replace $label "\"" "" -}}
+{{- $subjectQuery := $subject | urlquery -}}
+
+{{- if $obfuscate -}}
+  {{- $obfuscatedText := $linkText -}}
+  {{- if eq $linkText $address -}}
+    {{- $obfuscatedText = printf "%s@%s" $local $domainFull -}}
+  {{- end -}}
+  {{- $fallbackReversed := "" -}}
+  {{- range (findRE "(?s)." $obfuscatedText) -}}
+    {{- $fallbackReversed = printf "%s%s" . $fallbackReversed -}}
+  {{- end -}}
+  {{- $spanClass := "mail-obf-css" -}}
+  {{- if ne $class "" -}}
+    {{- $spanClass = printf "%s %s" $class $spanClass -}}
+  {{- end -}}
+  {{- $targetID := printf "mail-obf-%s" (md5 $idSeed) -}}
+  <span id="{{ $targetID }}" class="{{ $spanClass }}">{{ $fallbackReversed }}</span>
+  <script>
+    (() => {
+      const target = document.getElementById("{{ $targetID }}");
+      if (!target) return;
+      const me = {{ printf "%q" $local | safeJS }};
+      const at = "@";
+      const domain = {{ printf "%q" $domain | safeJS }};
+      const dot = ".";
+      const tld = {{ printf "%q" $tld | safeJS }};
+      const email = tld ? `${me}${at}${domain}${dot}${tld}` : `${me}${at}${domain}`;
+      const mailto = {{ if ne $subject "" }}`mailto:${encodeURIComponent(email)}?subject={{ $subjectQuery }}`{{ else }}`mailto:${encodeURIComponent(email)}`{{ end }};
+      const link = document.createElement("a");
+      link.href = mailto;
+      // Keep CSS obfuscation even when JS is enabled.
+      link.textContent = {{ printf "%q" $fallbackReversed | safeJS }};
+      link.className = {{ printf "%q" $spanClass | safeJS }};
+      target.replaceWith(link);
+    })();
+  </script>
+{{- else -}}
+  {{- $href := printf "mailto:%s" $address -}}
+  {{- if ne $subject "" -}}
+    {{- $href = printf "%s?subject=%s" $href $subjectQuery -}}
+  {{- end -}}
+  <a href="{{ $href | safeURL }}"{{ if ne $class "" }} class="{{ $class }}"{{ end }}>{{ $linkText }}</a>
+{{- end -}}

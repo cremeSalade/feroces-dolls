@@ -12,8 +12,7 @@ Nous voulons permettre à tous·tes de pouvoir partager son vécu, soit en prena
 
 Il est possible de venir prendre le micro sur place ou de nous envoyer votre témoignage:
 
-- par message sur Insta @ferocesdolls
-- par mail à reseautransfem-contact@lebib.org
+- par message sur Insta {{< insta "@ferocesdolls" >}}
+- par mail à {{< mail "reseautransfem-contact@lebib.org" >}}
 - en mettant un papier dans la boîte mise à disposition le jour même
 - en répondant à ce questionnaire: https://framaforms.org/temoignages-pour-le-tdor-2025-de-montpellier-1763224017
-
