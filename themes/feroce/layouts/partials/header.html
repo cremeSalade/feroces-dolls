@@ -11,6 +11,7 @@
     <div class="site-header-controls mt-6">
       {{ with site.Menus.main }}
         <nav class="site-nav" aria-label="Navigation principale">
+          {{ $currentSectionKey := partial "page-section-key.html" (dict "page" $) }}
           {{ range . }}
             {{/* Derive the section key from menu page first, then fallback to URL path. */}}
             {{ $sectionKey := "" }}
@@ -29,10 +30,14 @@
             {{/* Hide menu entries when the related section is disabled in config. */}}
             {{ $sectionEnabled := partial "section-enabled.html" (dict "site" site "key" $sectionKey) }}
             {{ if $sectionEnabled }}
-              {{/* Keep existing "active link" logic for menu highlighting. */}}
-              {{ $isActive := $.IsMenuCurrent "main" . }}
-              {{ if not $isActive }}{{ $isActive = $.HasMenuCurrent "main" . }}{{ end }}
-              {{ if not $isActive }}
+              {{/* Keep menu active state independent from baseURL/subpath differences. */}}
+              {{ $isActive := false }}
+              {{ if eq $sectionKey "home" }}
+                {{ $isActive = $.IsHome }}
+              {{ else if ne $currentSectionKey "" }}
+                {{ $isActive = eq $currentSectionKey $sectionKey }}
+              {{ else }}
+                {{/* Fallback for uncommon pages where .Section/.File are not available. */}}
                 {{ $menuPath := strings.TrimSuffix "/" .URL }}
                 {{ $currentPath := strings.TrimSuffix "/" $.RelPermalink }}
                 {{ if eq $menuPath "" }}{{ $menuPath = "/" }}{{ end }}
@@ -42,10 +47,6 @@
                 {{ else }}
                   {{ $isActive = or (eq $currentPath $menuPath) (hasPrefix $currentPath (printf "%s/" $menuPath)) }}
                 {{ end }}
-              {{ end }}
-              {{/* Guardrail: home item should only be active on the homepage itself. */}}
-              {{ if eq $sectionKey "home" }}
-                {{ $isActive = $.IsHome }}
               {{ end }}
               <a href="{{ .URL }}" class="link-main {{ if $isActive }}link-main-active{{ end }}">{{ .Name }}</a>
             {{ end }}
