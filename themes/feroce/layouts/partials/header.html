@@ -43,6 +43,10 @@
                   {{ $isActive = or (eq $currentPath $menuPath) (hasPrefix $currentPath (printf "%s/" $menuPath)) }}
                 {{ end }}
               {{ end }}
+              {{/* Guardrail: home item should only be active on the homepage itself. */}}
+              {{ if eq $sectionKey "home" }}
+                {{ $isActive = $.IsHome }}
+              {{ end }}
               <a href="{{ .URL }}" class="link-main {{ if $isActive }}link-main-active{{ end }}">{{ .Name }}</a>
             {{ end }}
           {{ end }}
